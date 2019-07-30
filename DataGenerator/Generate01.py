@@ -1,7 +1,10 @@
+# -*- coding: utf-8 -*-
 import random
 import time
 
+
 #Spark项目数据生成 - 爱奇艺影视网站服务器log生成器 - 直接生成非脏数据
+#
 
 #生成时间
 time_str=time.strftime("%Y-%m-%d %H:%M:%S",time.localtime())
@@ -64,7 +67,8 @@ def generate_log(count=10):
         query_log = "{ip}\t{localtime}\t\"GET {url} HTTP/1.0\"\t{reference}\t{status}".format(ip = sample_ip(),localtime=time_str,url=sample_url(),status=sample_status(),reference=sample_reference())
 
         #将日志写入文件
-        f=open("D:\\GenerateLogs","a")  #a参数代表打开一个文件用于追加。如果该文件已存在，文件指针将会放在文件的结尾。也就是说，新的内容将会被写入到已有内容之后。如果该文件不存在，创建新文件进行写入。
+        # f=open("D:\\GenerateLogs","a")  #a参数代表打开一个文件用于追加。如果该文件已存在，文件指针将会放在文件的结尾。也就是说，新的内容将会被写入到已有内容之后。如果该文件不存在，创建新文件进行写入。
+        f=open("/opt/module/spark/Spark-AiQiYi-Project-Datas/Datas","a")  #在linux下执行
         f.write(query_log+"\n")
         print(query_log)
         count = count - 1;
