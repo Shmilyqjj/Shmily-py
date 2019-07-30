@@ -71,4 +71,4 @@ def generate_log(count=10):
 
 
 if __name__ == '__main__':
-    generate_log(1000000);
+    generate_log(1000);
