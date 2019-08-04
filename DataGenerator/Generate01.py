@@ -4,7 +4,7 @@ import time
 
 
 #Spark项目数据生成 - 爱奇艺影视网站服务器log生成器 - 直接生成非脏数据
-#
+#字段：IP地址-时间-URL地址-访问来源-状态码
 
 #生成时间
 time_str=time.strftime("%Y-%m-%d %H:%M:%S",time.localtime())
