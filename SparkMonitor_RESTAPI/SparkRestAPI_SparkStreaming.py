@@ -8,6 +8,7 @@
 
 import requests
 import time
+count = 0 # 全局变量 记录同job running的批次数
 
 def getJSON(url):       # 得到JSON
     res = requests.get(url)
@@ -26,8 +27,9 @@ def getTime(JSON):      # 得到运行时间
 
 
 def main(applicationID,batchTime):
+
     baseUrl = 'http://hadoop101:4000/api/v1/applications/'+applicationID+'/jobs'
-    count = 0  #同Job记录Running状态次数
+     #同Job记录Running状态次数
     while True:
         if(getJSON(baseUrl+'?status=failed') != []):
             print('failed Job')  #报警-failed
