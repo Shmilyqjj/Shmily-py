@@ -1,9 +1,6 @@
 # Spark REST API监控Spark Applications运行时间
 import requests
 import time
-
-
-
 def getJson(url):
     res =  requests.get(url)
     if res.status_code == 200:
@@ -14,8 +11,6 @@ def main():
     print(type(jo))
     print(jo)
     list = jo[0]['attempts']
-
-
     print(type(list))
     st = list[0]['startTime']
     et = list[0]['endTime']
