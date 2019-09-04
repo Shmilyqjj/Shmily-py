@@ -3,7 +3,7 @@
 
 """
 :Description:[装饰器] 如果想访问属性可以通过属性的getter（访问器）和setter（修改器）方法进行对应的操作。如果要做到这点，就可以考虑使用@property包装器来包装getter和setter方法，使得对属性的访问既安全又方便
-:Owner: jiajing_qu
+:Owner: 曲佳境
 :Create time: 2019/9/4 14:38
 """
 
