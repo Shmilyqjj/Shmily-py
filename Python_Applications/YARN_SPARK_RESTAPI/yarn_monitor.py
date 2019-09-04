@@ -10,10 +10,10 @@ import requests
 import json
 import time
 
-from tesla.common.utility.send_mail import send as send_email
-from tesla.common.alarm.alarm_interface import alarm
-from tesla.service.public.config.conf_mysql import airflow_online,big_data
-from tesla.service.public.lib import clib_mysql
+# from tesla.common.utility.send_mail import send as send_email
+# from tesla.common.alarm.alarm_interface import alarm
+# from tesla.service.public.config.conf_mysql import airflow_online,big_data
+# from tesla.service.public.lib import clib_mysql
 
 NAMENODE = 'http://centos-bigdata-namenode-10-2-5-102.intsig.internal:8088'
 
