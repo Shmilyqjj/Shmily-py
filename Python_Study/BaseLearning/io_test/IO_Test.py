@@ -1,4 +1,7 @@
 # encoding=utf-8
+"""
+IO测试 文件读写
+"""
 def inputTest():
     str = raw_input()    # 函数从标准输入读取一个行，并返回一个字符串（去掉结尾的换行符）
     print(str)
