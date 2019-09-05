@@ -17,7 +17,7 @@ MONITOR_DICT = {
 
 def get_role_name(ip, service):
     """
-    根据主机器IP和服务获取该服务下所有组件的role_name
+    根据主机器IP和服务获取该服务下所有组件的role_names
     :param service: 服务名
     :param ip: 主机器IP
     :return: role_names
