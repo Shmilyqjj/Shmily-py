@@ -301,7 +301,9 @@ PYTHON_INNER_LIB = ['abc',
 'openpyxl',
 'kombu',
 'rsa',
-'pysqlContext']
+'pysqlContext',
+'gc',
+'signal',]
 
 
 def find_package_name(project_path):
