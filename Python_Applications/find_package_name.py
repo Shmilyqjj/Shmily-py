@@ -37,13 +37,6 @@ PYTHON_INNER_LIB = ['abc',
 'cmd',
 'code',
 'codecs',
-'whoosh',
-'synonyms',
-'table_conf',
-'pykafka',
-'BeautifulSoup',
-'pg',
-'pyhs2',
 'codeop',
 'collections',
 'colorsys',
@@ -281,7 +274,33 @@ PYTHON_INNER_LIB = ['abc',
 'total_ordering',
 'urllib',
 'xmlrpc',
-'_markupbase']
+'_markupbase',
+'whoosh',
+'synonyms',
+'table_conf',
+'odps',
+'pykafka',
+'xlwt',
+'snakebite',
+'pymongo',
+'webdm',
+'xlrd',
+'CRFPP',
+'flask',
+'tableauserverclient',
+'graphframes',
+'bson',
+'BeautifulSoup',
+'pg',
+'tensorflow',
+'pyhs2',
+'py2neo',
+'graphframe',
+'xgboost',
+'paramiko',
+'openpyxl',
+'kombu',
+'rsa',]
 
 
 def find_package_name(project_path):
@@ -356,29 +375,22 @@ if __name__ == '__main__':
     # s = find_file_name(project_path)
     # print(s)
 
-
 # result:
 """
 unicodedata
 gc
-odps
 yaml
-xlwt
 langdetect
 confluent_kafka
-snakebite
 happybase
 gensim
-pymongo
 signal
 Levenshtein
 pyddq
 networkx
 flashtext
 MySQLdb
-webdm
 neo4j
-xlrd
 dateutil
 hdfs
 ujson
@@ -388,37 +400,24 @@ user_agents
 Crypto
 influxdb
 jieba
-CRFPP
-flask
 elasticsearch
 marshal
 polyglot
 farmhash
-tableauserverclient
-graphframes
-bson
 binascii
 bs4
-tensorflow
 numpy
 cPickle
 simplejson
 pytz
 Geohash
 pyhive
-py2neo
 sklearn
-graphframe
-xgboost
 deap
-paramiko
-openpyxl
 lxml
 six
-kombu
 simhash
 pandas
-rsa
 pysqlContext
 scoop
 """
