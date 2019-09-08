@@ -28,6 +28,7 @@ def logs_manager(log_path,log_files,max_size,days):
     :param days:     历史日志过期时间
     :return:
     """
+    history_log_dir = ''
     if os.path.exists(log_path):
         for file_name in log_files:
             source = log_path + '/' + file_name
@@ -52,13 +53,13 @@ def logs_manager(log_path,log_files,max_size,days):
     # 定期删除
     for root, dirs, file in os.walk(history_log_dir):
         paths = [os.path.join(root, name) for name in file]
-    if len(paths) != 0:  # 文件数不为0
-        for name in paths:
-            now_timestamp = time.time()
-            alter_timestamp = os.path.getmtime(name)
-            if now_timestamp - alter_timestamp >=  86400*days:
-                os.remove(name)
-                print('历史日志文件过期,删除%s文件' % name)
+        if len(paths) != 0:  # 文件数不为0
+            for name in paths:
+                now_timestamp = time.time()
+                alter_timestamp = os.path.getmtime(name)
+                if now_timestamp - alter_timestamp >= 86400 * days:
+                    os.remove(name)
+                    print('历史日志文件过期,删除%s文件' % name)
 
 @auto_batch2
 def main(para = None):
