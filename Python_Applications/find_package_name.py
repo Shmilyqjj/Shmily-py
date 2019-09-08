@@ -303,8 +303,130 @@ PYTHON_INNER_LIB = ['abc',
 'rsa',
 'pysqlContext',
 'gc',
-'signal',]
+'signal',
+'cPickle',
+'MySQLdb']
 
+
+version_list =[
+'avro (1.8.2)',
+'backports.functools-lru-cache (1.5)',
+'backports.ssl-match-hostname (3.4.0.2)',
+'beautifulsoup4 (4.7.1)',
+'boto (2.48.0)',
+'boto3 (1.5.23)',
+'botocore (1.8.37)',
+'bs4 (0.0.1)',
+'bz2file (0.98)',
+'certifi (2018.1.18)',
+'chardet (3.0.4)',
+'clickhouse-cityhash (1.0.2.2)',
+'configobj (4.7.2)',
+'confluent-kafka (0.11.4)',
+'crypto (1.4.1)',
+'Cython (0.27.3)',
+'deap (1.2.2)',
+'decorator (4.3.0)',
+'dnspython (1.15.0)',
+'docopt (0.6.2)',
+'docutils (0.14)',
+'elasticsearch (6.3.0)',
+'fastavro (0.17.7)',
+'fasttext (0.9.1)',
+'flashtext (2.7)',
+'future (0.17.1)',
+'futures (3.2.0)',
+'gensim (3.3.0)',
+'Geohash (1.0)',
+'greenlet (0.4.13)',
+'happybase (1.1.0)',
+'hdfs (2.2.2)',
+'idna (2.6)',
+'importlib (1.0.4)',
+'influxdb (5.2.2)',
+'iniparse (0.4)',
+'iotop (0.6)',
+'ipaddr (2.1.11)',
+'ipaddress (1.0.16)',
+'jieba (0.39)',
+'jmespath (0.9.3)',
+'kitchen (1.1.1)',
+'langdetect (1.0.7)',
+'langid (1.1.6)',
+'libvirt-python (4.5.0)',
+'lxml (4.4.0)',
+'marisa-trie (0.7.5)',
+'Morfessor (2.0.4)',
+'mysql (0.0.1)',
+'MySQL-python (1.2.5)',
+'Naked (0.1.31)',
+'neo4j (1.7.4)',
+'neo4j-driver (1.7.4)',
+'neobolt (1.7.13)',
+'neotime (1.7.4)',
+'networkx (2.1)',
+'numpy (1.14.0)',
+'pandas (0.22.0)',
+'pathlib (1.0.1)',
+'perf (0.1)',
+'pip (9.0.1)',
+'ply (3.11)',
+'polyglot (16.7.4)',
+'pyahocorasick (1.1.4)',
+'pybind11 (2.3.0)',
+'pycld2 (0.31)',
+'pycrypto (2.6.1)',
+'pycurl (7.19.0)',
+'pyddq (4.1.1)',
+'pyfarmhash (0.2.2)',
+'pygobject (3.22.0)',
+'pygpgme (0.3)',
+'PyHive (0.6.1)',
+'PyICU (2.2)',
+'pyliblzma (0.5.3)',
+'pyltp (0.2.1)',
+'python-dateutil (2.6.1)',
+'python-Levenshtein (0.12.0)',
+'python-linux-procfs (0.4.9)',
+'pytz (2017.3)',
+'pyudev (0.15)',
+'pyxattr (0.5.1)',
+'PyYAML (3.12)',
+'pyzmq (17.0.0)',
+'redis (2.10.6)',
+'requests (2.18.4)',
+'s3transfer (0.1.12)',
+'sasl (0.2.1)',
+'schedutils (0.4)',
+'scikit-learn (0.19.1)',
+'scipy (1.0.0)',
+'scoop (0.7.1.1)',
+'setuptools (38.4.0)',
+'shellescape (3.4.1)',
+'simhash (1.8.0)',
+'simplejson (3.13.2)',
+'six (1.11.0)',
+'sklearn (0.0)',
+'slip (0.4.0)',
+'slip.dbus (0.4.0)',
+'smart-open (1.5.6)',
+'soupsieve (1.9.1)',
+'thrift (0.11.0)',
+'thrift-sasl (0.3.0)',
+'thriftpy (0.3.9)',
+'ua-parser (0.8.0)',
+'ujson (1.35)',
+'urlgrabber (3.10)',
+'urllib3 (1.22)',
+'user-agents (2.0)',
+'wheel (0.32.2)',
+'yum-metadata-parser (1.1.4)',
+'zhconv (1.4.0)'
+]
+tran=(('yaml','PyYAML==3.12'),
+ ('confluent_kafka','confluent-kafka'),
+ ('Crypto','pycrypto==2.6.1'),
+ ('sklearn','scikit-learn==0.19.2'),)
 
 def find_package_name(project_path):
     """
@@ -322,37 +444,45 @@ def find_package_name(project_path):
                         # print(files)
                         with open(files, 'r') as f:
                             lines = f.readlines()
+                            # print(lines)
                             for line in lines:
                                 if re.match('^\s*import.*', line) or re.match('^\s*from.*import.*', line):
-                                    line = line
+                                    line = line.lstrip()
+                                    # print(line)   no problem
                                     package_list = line.split(' ')[1].split('.')[0].strip().strip('*').strip('=').split(',')
                                     if len(package_list) == 1:
-                                        all_pack_name.add(package_list[0])
+                                        if package_list[0]:
+                                            all_pack_name.add(package_list[0])
                                     else:
                                         for pack in package_list:
-                                            all_pack_name.add(pack)
+                                            if pack:
+                                                all_pack_name.add(pack)
+
+    packs = []
+    print all_pack_name
     for pack_name in all_pack_name:
         if pack_name not in PYTHON_INNER_LIB and pack_name not in find_file_name(project_path):
-            print(pack_name)
+            # print(pack_name)
+            packs.append(pack_name)
+    return packs
 
+def filters(packs,version_list):
+    packs1=[]
+    for i in range(len(packs)):
+        flag = 0
+        for j in range(len(version_list)):
+            if packs[i] in version_list[j]:
+                res = re.match(r".*\((.*)\).*", version_list[j]).group(1)
+                packs1.append(packs[i] + "==" + res)
+                flag = 1
+        if not flag:
+            packs1.append(packs[i])
 
-
-
-# def find_file_name(project_path):
-#     """
-#     所有py文件的文件名
-#     :param project_path: 项目文件夹路径
-#     :return: file_name_list 所有文件名 list
-#     """
-#     file_name_list = []
-#     if os.path.exists(project_path):
-#         for root, dirs, filenames in os.walk(project_path):
-#             for files in filenames:
-#                 if files:
-#                     if re.match('.*py$', files): # 正确
-#                         files = files.rstrip('.py')
-#                         file_name_list.append(files)
-#     return file_name_list
+    for i in range(len(packs1)):
+        for it in tran:
+            if re.match(".*%s.*"%it[0],packs1[i]):
+                packs1[i] = it[1]
+    print packs1
 
 
 def find_file_name(project_path):
@@ -372,55 +502,14 @@ def find_file_name(project_path):
     return file_name_list
 
 
+
+
 if __name__ == '__main__':
     project_path = r'D:\svn\tesla_branch\tesla'
-    find_package_name(project_path)
+    packs = find_package_name(project_path)
+    filters(packs, version_list)
     # s = find_file_name(project_path)
     # print(s)
 
-# result:
-"""
-unicodedata
-gc
-yaml
-langdetect
-confluent_kafka
-happybase
-gensim
-signal
-Levenshtein
-pyddq
-networkx
-flashtext
-MySQLdb
-neo4j
-dateutil
-hdfs
-ujson
-redis
-pathlib
-user_agents
-Crypto
-influxdb
-jieba
-elasticsearch
-marshal
-polyglot
-farmhash
-binascii
-bs4
-numpy
-cPickle
-simplejson
-pytz
-Geohash
-pyhive
-sklearn
-deap
-lxml
-six
-simhash
-pandas
-pysqlContext
-scoop
-"""
+
+
