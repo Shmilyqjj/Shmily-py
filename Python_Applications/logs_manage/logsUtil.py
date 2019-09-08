@@ -10,6 +10,7 @@ import os
 import datetime
 import time
 import shutil
+
 """
 输入格式：
 log_path = '/data/airflow/logs'
@@ -19,7 +20,7 @@ days = 0.1
 """
 
 
-def logs_manager(log_path,log_files,max_size,days):
+def logs_manager(log_path, log_files, max_size, days):
     """
     日志文件管理
     :param log_path: 日志所在路径
@@ -28,16 +29,16 @@ def logs_manager(log_path,log_files,max_size,days):
     :param days:     历史日志过期时间
     :return:
     """
-    history_log_dir = ''
+    global history_log_dir
     if os.path.exists(log_path):
         for file_name in log_files:
             source = log_path + '/' + file_name
             if os.path.exists(source):
-                file_size = os.path.getsize(source)/1024/1024  # b转mb
+                file_size = os.path.getsize(source) / 1024 / 1024  # b转mb
                 if file_size >= max_size:
                     now_time = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-                    history_log_dir = log_path+'/log_history/'
-                    target = history_log_dir +file_name + '_' + now_time
+                    history_log_dir = log_path + '/log_history/'
+                    target = history_log_dir + file_name + '_' + now_time
                     if not os.path.exists(history_log_dir):
                         os.mkdir(history_log_dir)
                         print("创建日志文件夹 %s" % history_log_dir)
@@ -61,8 +62,9 @@ def logs_manager(log_path,log_files,max_size,days):
                     os.remove(name)
                     print('历史日志文件过期,删除%s文件' % name)
 
+
 @auto_batch2
-def main(para = None):
+def main(para=None):
     log_path = para.get('log_path')
     log_files = para.get('log_files')
     max_size = para.get('max_size')
@@ -70,8 +72,5 @@ def main(para = None):
     logs_manager(log_path, log_files, max_size, days)
 
 
-
-
 if __name__ == '__main__':
     main()
-
