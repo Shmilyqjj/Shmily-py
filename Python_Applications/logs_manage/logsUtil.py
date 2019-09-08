@@ -10,7 +10,6 @@ import os
 import datetime
 import time
 import shutil
-
 """
 输入格式：
 log_path = '/data/airflow/logs'
@@ -27,7 +26,7 @@ def logs_manager(log_path, log_files, max_size, days):
     :param log_files:日志文件名 list
     :param max_size: max日志大小
     :param days:     历史日志过期时间
-    :return:
+    :return: 无返回值
     """
     global history_log_dir
     if os.path.exists(log_path):
