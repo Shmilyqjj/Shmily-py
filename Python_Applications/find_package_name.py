@@ -305,7 +305,31 @@ PYTHON_INNER_LIB = ['abc',
 'gc',
 'signal',
 'cPickle',
-'MySQLdb']
+'MySQLdb',
+'unicodedata',
+'pymysql',
+'psyco',
+'company_word_split_new',
+'fcntl',
+'stop_words',
+'ods_edw_company',
+'matplotlib',
+'get_business_keyword',
+'relation_calculate',
+'IndustryProductGraph',
+'get_address_detail',
+'marshal',
+'udf_register',
+'find_and_classify',
+'pgdb',
+'binascii',
+'bertModule',
+'zhtools',
+'calculate_multi',
+'DBUtils',
+'Pickle',
+'get_child_code',
+'neo4j-driver']
 
 
 version_list =[
@@ -361,7 +385,6 @@ version_list =[
 'MySQL-python (1.2.5)',
 'Naked (0.1.31)',
 'neo4j (1.7.4)',
-'neo4j-driver (1.7.4)',
 'neobolt (1.7.13)',
 'neotime (1.7.4)',
 'networkx (2.1)',
@@ -421,12 +444,22 @@ version_list =[
 'user-agents (2.0)',
 'wheel (0.32.2)',
 'yum-metadata-parser (1.1.4)',
-'zhconv (1.4.0)'
+'zhconv (1.4.0)',
+'pyhive (0.6.1)',
+'python-Levenshtein (0.12.0)'
 ]
 tran=(('yaml','PyYAML==3.12'),
  ('confluent_kafka','confluent-kafka'),
  ('Crypto','pycrypto==2.6.1'),
  ('sklearn','scikit-learn==0.19.2'),)
+
+maps = {
+    'Levenshtein':'python-Levenshtein',
+    'pyhive':'PyHive',
+    'dateutil':'python-dateutil',
+    'farmhash':'pyfarmhash',
+    'gensim':'gensim # NumPy and SciPy are dependencies of gensim!'
+}
 
 def find_package_name(project_path):
     """
@@ -459,7 +492,6 @@ def find_package_name(project_path):
                                                 all_pack_name.add(pack)
 
     packs = []
-    print all_pack_name
     for pack_name in all_pack_name:
         if pack_name not in PYTHON_INNER_LIB and pack_name not in find_file_name(project_path):
             # print(pack_name)
@@ -468,6 +500,11 @@ def find_package_name(project_path):
 
 def filters(packs,version_list):
     packs1=[]
+    for w in packs:
+        for key in maps:
+            if w == key:
+                packs.remove(key)
+                packs.append(maps.get(key))
     for i in range(len(packs)):
         flag = 0
         for j in range(len(version_list)):
@@ -478,11 +515,14 @@ def filters(packs,version_list):
         if not flag:
             packs1.append(packs[i])
 
-    for i in range(len(packs1)):
+    for i in range(len(packs1)): # pip install %s 版本号
         for it in tran:
             if re.match(".*%s.*"%it[0],packs1[i]):
                 packs1[i] = it[1]
-    print packs1
+        packs1[i] = 'pip install ' + packs1[i]
+    for result in packs1:
+        if result != 'pip install avro==0.17.7':
+            print(result)
 
 
 def find_file_name(project_path):
