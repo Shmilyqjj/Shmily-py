@@ -272,7 +272,6 @@ PYTHON_INNER_LIB = ['abc',
 'socketserver',
 'test',
 'total_ordering',
-'urllib',
 'xmlrpc',
 '_markupbase',
 'whoosh',
@@ -460,6 +459,11 @@ maps = {
     'farmhash':'pyfarmhash',
     'gensim':'gensim # NumPy and SciPy are dependencies of gensim!'
 }
+#定制内容  额外加的
+extras = [
+    'pip uninstall urllib3',
+    'pip install urllib3==1.22'
+]
 
 def find_package_name(project_path):
     """
@@ -520,6 +524,7 @@ def filters(packs,version_list):
             if re.match(".*%s.*"%it[0],packs1[i]):
                 packs1[i] = it[1]
         packs1[i] = 'pip install ' + packs1[i]
+    packs1.extend(extras)
     for result in packs1:
         if result != 'pip install avro==0.17.7':
             print(result)
