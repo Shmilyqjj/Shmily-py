@@ -22,6 +22,7 @@ shuffle 操作是 spark 中最耗时的操作,应尽量避免不必要的 shuffl
 
 
 
+
 """
 pyspark - core
 
@@ -62,5 +63,10 @@ pyspark.sql.Window 用于处理窗口功能。
 class pyspark.sql.SparkSession（sparkContext，jsparkSession = None ）
 
 df = spark.sql
+
+"""
+
+"""
+性能优化:
 
 """
