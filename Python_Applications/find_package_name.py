@@ -459,10 +459,13 @@ maps = {
     'farmhash':'pyfarmhash',
     'gensim':'gensim # NumPy and SciPy are dependencies of gensim!'
 }
+
 #定制内容  额外加的
 extras = [
     'pip uninstall urllib3',
-    'pip install urllib3==1.22'
+    'pip install urllib3==1.22',
+    'pip install thrift==0.11.0',
+    'pip install thrift-sasl==0.3.0'
 ]
 
 def find_package_name(project_path):
