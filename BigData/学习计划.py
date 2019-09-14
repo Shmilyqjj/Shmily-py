@@ -14,6 +14,9 @@ phoenix相关使用       网上教程                          已沟通     1�
 hbase导数流程优化     付同配合                          已沟通     1天
 
 week_2
+Structed Streaming 原理及使用 2天  消费延迟
+熟悉tesla中airflow配置        1天
+Alluxio调研                   2天
 
 
 
