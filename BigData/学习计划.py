@@ -43,11 +43,6 @@ Alluxio调研 	了解Alluxio和集群的整合	已沟通	了解Alluxio的优势�
 
 
 
-
-
-
-
-
 """
 old:
 09月份：airflow熟悉、spark可通过官网自己编写所有代码、zeppelin熟悉使用及简单运维
