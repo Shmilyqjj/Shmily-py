@@ -18,6 +18,13 @@ Structed Streaming 原理及使用 2天  消费延迟
 熟悉tesla中airflow配置        1天
 Alluxio调研                   2天
 
+week_3
+Structed Streaming学习使用	重构cdbp2hive_steaming为python（已有代码整理即可）、airflow全局clear代码完善	已沟通	可优化现有streaming代码	1天							
+phoenix、以及hbase shell熟悉学习	官网相关api /tesla代码	已沟通	熟悉hbase shell可做日常维护	2天	
+Alluxio调研 	了解Alluxio和集群的整合	已沟通	了解Alluxio的优势，以及运用场景	2天	
+
+
+
 
 
 长期（2019年）：
