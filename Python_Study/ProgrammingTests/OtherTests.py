@@ -25,7 +25,15 @@
 # print(sorted(list0,reverse=True))
 
 
+"""
+os and commands
+import commands
+(status, output) = commands.getstatusoutput('python %s' % file_path) 返回命令行状态
 
+
+
+
+"""
 
 
 if __name__ == '__main__':
