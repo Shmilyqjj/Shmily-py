@@ -4,22 +4,24 @@
 """
 :Description: 获取AirFlow的tasks的上游和下游,实现airflow的全局clear
 :Owner: jiajing_qu
-:Create time: 2019/9/18 16:39
+:Create time: 2019/9/19 16:39
 """
+import commands
+import datetime
 from airflow import models
 from airflow import settings
-
-
+from tesla.common.utility.para_deal import auto_batch2
 dag_bag = models.DagBag(settings.DAGS_FOLDER)
 results = set()  # 用于暂存结果
+clear_tasks = {}
 
 
 def get_streams(current_task, down=True):
     """
-    递归获取一个task_id上游或者下游的所有task_id
+    递归获取一个task_id上游或者下游的所有task_id - 不直接调用,要调用get_dependencies(dag_id, task_id, down=True)
     :param current_task: 当前task对象
     :param down: default->downstream  False->upstream
-    :return: downstream or upstreams  set() 用完要手动清空
+    :return: downstream or upstreams  set()
     """
     if down:
         ti_list = current_task.downstream_list  # 获取下游所有task实例的列表
@@ -80,36 +82,13 @@ def find_whole_tasks_and_dag():
     return dic
 
 
-def get_dag_id_by_tasks(task_id, whole_dag_tasks):      # 需要改改改
+def find_related_tasks(dep_list, whole_dag_tasks):
     """
-    根据task_id获取dag_id
-    :param task_id:
-    :param whole_dag_tasks:
-    :return: dag_id
+    递归获取有关的sensor
+    :param dep_list: 依赖的task的列表
+    :param whole_dag_tasks: 全局的{dag:[tasks]}
+    :return:
     """
-    for dag in whole_dag_tasks:
-        if task_id in whole_dag_tasks[dag]:
-            return dag
-
-
-def find_sensors(tasks):
-    """
-    筛选所有sensor task
-    :param tasks: set/list
-    :return:sensor_list
-    """
-    res = []
-    if tasks is not None:
-        for t in tasks:
-            if '_sensor' in t:
-                res.append(t)
-        return res
-
-
-clear_tasks = {}
-
-
-def find_related_tasks(dep_list):
     dep_sensor_list = map(lambda x: x + '_sensor', dep_list)  # 依赖拼_sensor
     for dep_sensor in dep_sensor_list:   # 检索sensor是否存在
         dags = filter(lambda key: dep_sensor in whole_dag_tasks[key], whole_dag_tasks)  # 得到sensor对应的dag_id的列表
@@ -121,19 +100,38 @@ def find_related_tasks(dep_list):
                 else:
                     clear_tasks[dag] = [dep_sensor]
                 if not ''.endswith("_sensor"):  # 如果_sensor结尾的task,忽略
-                    find_related_tasks(next_dep_list)
+                    find_related_tasks(next_dep_list, whole_dag_tasks)
+
+@auto_batch2()
+def main(para = None):
+    dag_id = para.get('dag_id')
+    task_id = para.get('task_id')
+    dep_list = get_dependencies(dag_id, task_id, down=True)
+    date = (datetime.datetime.now()+datetime.timedelta(days=-1)).strftime("%Y-%m-%d")  # 当前日期减一天
+    # 先clear该dag内的dep_list
+    for task in dep_list:
+        # airflow clear daily_task_online -t time.time_sensor_08_00 -d -s 2019-09-21 -e 2019-09-21
+        (status, output) = commands.getstatusoutput('airflow clear %s -t %s -d -s %s -e %s' % (dag_id, task, date, date))
+        if status != 0:
+            print(output)
+    whole_dag_tasks = find_whole_tasks_and_dag()
+    clear_tasks.clear()
+    find_related_tasks(dep_list, whole_dag_tasks)
+    # 再clear与_sensor相关的clear_tasks
+    for dag in clear_tasks:
+        for task in clear_tasks[dag]:
+            # airflow clear daily_task_online -t time.time_sensor_08_00 -d -s 2019-09-21 -e 2019-09-21
+            (status, output) = commands.getstatusoutput('airflow clear %s -t %s -d -s %s -e %s' % (dag, task, date, date))
+            if status != 0:
+                print(output)
 
 
 if __name__ == '__main__':
-    results.clear()
-    dag_id = 'behavior_dag_online'
-    task_id = 'behavior.cdbp_done_dummy'
+    main()
 
-    whole_dag_tasks = find_whole_tasks_and_dag()
-    dep_list = get_dependencies(dag_id, task_id, down=True)
-    # 先kill本dag上游或下游的tasks
 
-    # 然后加_sensor相关的
+
+
 
 
 
