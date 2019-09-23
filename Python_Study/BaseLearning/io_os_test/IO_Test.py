@@ -3,6 +3,7 @@
 IO测试 文件读写
 """
 import os
+import commands
 
 
 def inputTest():
@@ -47,6 +48,19 @@ def read_dir(path):
     """
     for root, dirs, filenames in os.walk(path):
         path = [os.path.join(root, name) for name in filenames] # 所有文件全路径
+
+
+def exec_cmd(cmd):
+    """
+    os/commands模块执行命令行
+    :param cmd: 要执行的命令
+    :return:
+    """
+    (status, output) = commands.getstatusoutput(cmd) # 返回执行的状态码status 1失败0成功 和输出内容output
+    os.system(cmd) # 只执行命令,无返回
+    a = os.popen(cmd) # 执行命令 a.read()返回输出结果  需要最后a.close()关闭对象
+    with os.popen(r'adb devices', 'r') as f: # 和 with open类似
+        text = f.read()
 
 if __name__ == "__main__":
     main()
