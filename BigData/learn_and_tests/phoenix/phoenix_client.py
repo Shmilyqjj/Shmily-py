@@ -6,6 +6,11 @@
 :Owner: jiajing_qu
 :Create time: 2019/9/25 11:12
 """
+"""
+
+"""
+
+
 import phoenixdb
 import phoenixdb.cursor
 ZK_URL = '10.2.5.201'
@@ -35,6 +40,12 @@ class phoenix_client:
     def __init__(self):
         self.url = ''.format(HBASE_HOST)
         self.Hbase_db = HBASE_DB
+
+
+    def create_mapping(self,hbase_host,hbase_db):
+        """"""
+        pass#给已有的hbase表创建phoenix映射
+
 
     def pull_data(self,query_str):
         """
