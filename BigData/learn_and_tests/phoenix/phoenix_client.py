@@ -7,8 +7,46 @@
 :Create time: 2019/9/25 11:12
 """
 """
+安装部署phoenix:
+1.官网http://phoenix.apache.org/index.html下载对应HBase版本的phoenix
+2.上传到集群 tar -zxvf apache-phoenix-4.14.3-HBase-1.3-bin.tar.gz -C /opt/module  mv重命名为phoenix (仅在主机器HMaster所在机器上操作)
+3.将phoenix/phoenix-4.14.3-HBase-1.3-server.jar分发到各个集群的HBASE_HOME/lib  scp -r  ....
+4.至此，完成了phoenix的安装部署
 
+连接phoenix:
+1.先启动hdfs和yarn
+2.三台机器启动zookeeper  ->  /opt/module/zookeeper-3.4.13/bin/zkServer.sh start
+3.主机启动hmaster -> /opt/module/hbase/bin/hbase-daemon.sh start master   
+4.从机启动HregionServer -> /opt/module/hbase/bin/hbase-daemon.sh start regionserver
+5.主机运行 bin/sqlline.py localhost       出现： Building list of tables and columns for tab-completion (set fastconnect to true to skip)... 即为成功
+
+phoenix常用命令行操作：
+help        查看帮助
+!tables     查看所有映射表
+!quit       退出
+!sql        回车后输入sql语句回车
+
+eg:
+!sql
+create table phoenix_table (mykey integer not null primary key, mycolumn varchar);
+!sql
+upsert into phoenix_table values (1,'qjj');
+!sql
+select * from phoenix_table
+此时用HBase Shell查询
+hbase shell -> list 会发现上面phoenix_table，已经转为了大写的表名 -> scan 'PHOENIX_TABLE' -> 
+结果：
+ROW                              COLUMN+CELL                                                                                
+ \x80\x00\x00\x01                column=0:\x00\x00\x00\x00, timestamp=1569431662453, value=x                                
+ \x80\x00\x00\x01                column=0:\x80\x0B, timestamp=1569431662453, value=qjj                                      
+1 row(s) in 0.0230 seconds
+---------------------------------------------------------------------------------------
+!sql
+drop table phoenix_table;
+这时HBase中表也删除了
 """
+
+
 
 
 import phoenixdb
@@ -29,11 +67,11 @@ def easy_conn():
     cursor.execute("CREATE TABLE users (id INTEGER PRIMARY KEY, username VARCHAR)")
     cursor.execute("UPSERT INTO users VALUES (?, ?)", (1, 'qjj'))
     cursor.execute("SELECT * FROM users")
-    print cursor.fetchall() # 只能用在select之后,fetch之后清空cursor的内容,再fetch结果为空
+    print(cursor.fetchall()) # 只能用在select之后,fetch之后清空cursor的内容,再fetch结果为空
     # -----------------------------------------------
     cursor = conn.cursor(cursor_factory=phoenixdb.cursor.DictCursor)  # DictCursor :A cursor which returns results as a dictionary
     cursor.execute("SELECT * FROM users WHERE id=1")
-    print cursor.fetchone()['USERNAME']
+    print(cursor.fetchone()['USERNAME'])
 
 
 class phoenix_client:
