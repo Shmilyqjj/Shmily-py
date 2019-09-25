@@ -51,9 +51,9 @@ drop table phoenix_table;
 
 import phoenixdb
 import phoenixdb.cursor
-ZK_URL = '10.2.5.201'
-HBASE_HOST = '10.2.5.37'
-HBASE_DB = 'user'
+ZK_URL = '192.168.1.101'
+HBASE_HOST = '192.168.1.101'
+HBASE_DB = 'phoenix_table'
 
 def easy_conn():
     """
