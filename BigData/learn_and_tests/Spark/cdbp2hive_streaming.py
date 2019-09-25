@@ -10,7 +10,7 @@ from tesla.base_data.behavior.streaming import base_cdb_streaming
 from pyspark.sql.functions import col, size, when
 from tesla.common.utility.para_deal import auto_batch
 from tesla.common.utility.sparkUtils.base_spark import Base_Spark
-TOPICS = "topics_names"
+TOPICS = "cloud_behavior_other,cloud_behavior,cloud_behavior_qxb,cloud_behavior_cc,cloud_behavior_cs,cloud_behavior_zdao"
 
 
 def cdbp2hive(spark, topics):
@@ -36,29 +36,29 @@ def cdbp2hive(spark, topics):
               when lower(substr(product_name,1,3)) = 'zp_' then 'zp'
               else 'other' end product ,
               concat(
-              from_unixtime(unix_timestamp() +4*60 , '%Y%m%d0005')
+              from_unixtime(unix_timestamp() +4*60 , 'yyyyMMdd0005')
                ,'_'
-               ,from_unixtime(unix_timestamp()+3600*24 +4*60 , '%Y%m%d0005')
+               ,from_unixtime(unix_timestamp()+3600*24 +4*60 , 'yyyyMMdd0005')
               ) batch
               from cdb_tmp_table
         ''')
 
     cdb_df = spark.sql(sql)
     # checkpoint
-    checkpoint_location = '/data_test/kafka_checkpoint/checkpoint_dir/' + topics.replace(',', '_')
+    checkpoint_location = '/data_test/kafka_checkpoint/cdbp2hive_checkpoint/' + topics.replace(',', '_')
 
     # 数据存放地址
     data_path = "/user/hive/warehouse/test.db/wrk_cdb_inc_product"
     # 以parquet格式按"batch", "product", "operation"这三个字段进行分区
-    cdb_df.writeStream\
+    query = cdb_df.writeStream\
           .outputMode("append")\
           .format("parquet")\
           .option("checkpointLocation", checkpoint_location) \
           .option("path", data_path) \
           .partitionBy("batch", "product", "operation") \
-          .trigger(processingTime='600 seconds') \
+          .trigger(processingTime='60 seconds') \
           .start()
-
+    query.awaitTermination()
 
 
 def main(spark):
