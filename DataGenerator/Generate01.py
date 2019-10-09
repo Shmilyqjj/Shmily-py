@@ -71,8 +71,8 @@ def generate_log(count=10):
         f=open("/opt/module/spark/Spark-AiQiYi-Project-Datas/Datas","a")  #在linux下执行
         f.write(query_log+"\n")
         print(query_log)
-        count = count - 1;
+        count = count - 1
 
 
 if __name__ == '__main__':
-    generate_log(1000);
+    generate_log(1000)
