@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 # -*- coding:utf-8 -*-
 #全局变量 函数内改变函数外变量的方法
-# import re
+import re
+import os
 #
 # count = 0
 # def xyz():
@@ -26,15 +27,29 @@
 
 
 """
-os and commands
-import commands
-(status, output) = commands.getstatusoutput('python %s' % file_path) 返回命令行状态
-
-
 
 
 """
+# p = [1,2,4,5,6,7]
+# def abc(paras):
+#     def cde(paras):
+#         print(paras[0])
+#     return cde(paras)
+
+# 查目录下四字节的文件
+# def find_files():
+#     file_list = []
+#     path = 'D:\\'
+#     for root, dirs, f in os.walk(path):
+#         paths = [os.path.join(root, name) for name in f]
+#         if len(paths) != 0:  # 文件数不为0
+#             for name in paths:
+#                 if os.path.getsize(name) == 4:
+#                     file_list.append(name)
+#     return file_list
 
 
 if __name__ == '__main__':
+    # abc(p)
     pass
+
