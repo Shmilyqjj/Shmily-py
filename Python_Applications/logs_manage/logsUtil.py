@@ -82,7 +82,8 @@ def logs_manager(log_path, days, max_size=0, log_files=None):
                             except:
                                 logging.error(traceback.format_exc())
                 else:
-                    logging.info('未找到指定的日志文件 %s' % source)
+                    # logging.info('未找到指定的日志文件 %s' % source)
+                    pass
 
         if not log_files:  # 如果未指定具体日志文件则遍历路径下全部文件,并删除过期日志
             now = time.time()
@@ -96,7 +97,6 @@ def logs_manager(log_path, days, max_size=0, log_files=None):
                                 logging.info('历史日志文件过期,删除%s文件' % file_path)
                             except:
                                 logging.error(traceback.format_exc())
-
             rm_empty_dirs(log_path)  # 递归删除空文件夹
 
         if os.path.exists(history_log_dir):  # 定期删除历史文件夹中的日志
