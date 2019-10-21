@@ -17,3 +17,18 @@ for i in range(len(res)-1):
     if name.find("task_id=") >= 0:
         print(res_mb,name)
 
+
+"""
+lsof -p PID
+
+ps -aux |sort -k4nr | head -n 40 |tr -s ' '|cut -d ' ' -f 1,4,11
+
+ps -eo pmem,pcpu,rss,vsize,args | sort -k 1 -n -r | less
+
+
+ps -aux |sort -k4nr | grep task_id= | head -n 40 |tr -s ' '|cut -d ' ' -f 1,4,15
+
+
+ps -aux |sort -k4nr | grep task_id=app.cc_crash_email_push
+"""
+
