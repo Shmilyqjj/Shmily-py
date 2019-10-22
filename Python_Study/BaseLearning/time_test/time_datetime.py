@@ -67,7 +67,7 @@ print ('-1 day',(datetime.datetime.now()+datetime.timedelta(days=-1)).strftime("
 
 # datetime的差值为datedelta
 d1 = datetime.datetime.now()  # datetime
-time.sleep(1000)
+time.sleep(3)
 d2 = datetime.datetime.now()  # datetime
 d3 = d2 - d1   # timedelta格式
 print(d3.seconds)  # 秒
