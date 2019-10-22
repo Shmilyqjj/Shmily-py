@@ -65,6 +65,14 @@ print ('+1 day',(datetime.datetime.now()+datetime.timedelta(days=1)).strftime("%
 print ('-1 day',(datetime.datetime.now()+datetime.timedelta(days=-1)).strftime("%Y-%m-%d %H:%M:%S"))
 # days改为hours minutes
 
+# datetime的差值为datedelta
+d1 = datetime.datetime.now()  # datetime
+time.sleep(1000)
+d2 = datetime.datetime.now()  # datetime
+d3 = d2 - d1   # timedelta格式
+print(d3.seconds)  # 秒
+print(d3.total_seconds()) # 秒+微秒
+
 
 
 
