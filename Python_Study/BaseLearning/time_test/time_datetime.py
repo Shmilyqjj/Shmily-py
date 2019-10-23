@@ -8,6 +8,7 @@
 """
 import time
 import datetime
+import pymysql
 
 # 时间戳 float
 timestamp = time.time()
@@ -72,6 +73,10 @@ d2 = datetime.datetime.now()  # datetime
 d3 = d2 - d1   # timedelta格式
 print(d3.seconds)  # 秒
 print(d3.total_seconds()) # 秒+微秒
+
+# Mysql插入timestamp(6)或者datetime类型
+date_time = datetime.datetime.now()
+pymysql.connect().query("""insert into table_names VALUES ('%s','%s',NULL )""" % (date_time.strftime("%Y-%m-%d %H-%M-%S")))
 
 
 
