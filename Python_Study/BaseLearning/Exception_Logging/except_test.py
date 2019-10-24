@@ -8,8 +8,22 @@
 """
 import time
 
+def raise_exception():
+    """
+    自定义抛出异常
+    :return:
+    """
+    if 1>0:
+        print("1>0")
+        raise Exception("1>0正确的")
 
 def return_test(a,b):
+    """
+    测试finally的return  与java原理相同,先finally的return 再 try的return
+    :param a:
+    :param b:
+    :return:
+    """
     try:
         func(a,b)
         return 'try'
@@ -40,4 +54,8 @@ if __name__ == '__main__':
     print('---------------------------')
     time.sleep(1)
     print(return_test(1, 1))
+
+    print('---------------------------')
+    time.sleep(2)
+    raise_exception()
 
