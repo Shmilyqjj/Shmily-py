@@ -6,6 +6,15 @@
 :Owner: jiajing_qu
 :Create time: 2019/9/6 10:29
 """
+
+"""
+如果定期删除日志 - 整个文件夹下的日志而非指定文件，则一条linux命令可搞定
+find /tmp/ -maxdepth 1 -type d -mtime +1 | xargs rm -rf 
+"""
+
+
+
+
 import os
 import datetime
 import time
