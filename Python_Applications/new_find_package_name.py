@@ -2,15 +2,15 @@
 # -*- coding:utf-8 -*-
 
 """
-:Description: 
-:Owner: jiajing_qu
-:Create time: 2019/8/22
+:Description:   需要修改-记录数多了-不准确
+:Owner:
+:Create time: 2019/10/31
 """
 import os
-import re
 import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
+import re
 from collections import deque  # List插入慢 用deque优化插入删除效率
 
 
@@ -450,6 +450,7 @@ version_list =[
 'pyhive (0.6.1)',
 'python-Levenshtein (0.12.0)'
 ]
+
 tran=(('yaml','PyYAML==3.12'),
  ('confluent_kafka','confluent-kafka'),
  ('Crypto','pycrypto==2.6.1'),
@@ -471,42 +472,47 @@ extras = [
     'pip install thrift-sasl==0.3.0'
 ]
 
+
+
+def get_all_files(project_path):
+    all_files = []
+    for root, dirs, filenames in os.walk(project_path):
+        all_files+=dirs
+        all_files+=filenames
+    return all_files
+
 def find_package_name(project_path):
     """
     找到所有包/库的名称，存入无重复set集合
     :param project_path:
     :return:
     """
-    all_pack_name = set()   # s.add(package_name)
+    module_set = set()
+    all_files = get_all_files(project_path)
     if os.path.exists(project_path):
         for root, dirs, filenames in os.walk(project_path):
-            path = [os.path.join(root, name) for name in filenames]
-            for files in path:
-                if files:
-                    if re.match('.*py$', files):
-                        # print(files)
-                        with open(files, 'r') as f:
-                            lines = f.readlines()
-                            # print(lines)
-                            for line in lines:
-                                if re.match('^\s*import.*', line) or re.match('^\s*from.*import.*', line):
-                                    line = line.lstrip()
-                                    # print(line)   no problem
-                                    package_list = line.split(' ')[1].split('.')[0].strip().strip('*').strip('=').split(',')
-                                    if len(package_list) == 1:
-                                        if package_list[0]:
-                                            all_pack_name.add(package_list[0])
-                                    else:
-                                        for pack in package_list:
-                                            if pack:
-                                                all_pack_name.add(pack)
+            files = [os.path.join(root, name) for name in filenames]
+            for file in files:
+                if file.endswith(".py"):
+                    with open(file, 'r') as f:
+                        lines = f.readlines()
+                        for line in lines:
+                            line = line.strip()
+                            if line.startswith("import ") or line.startswith("from") and "import" in line:
+                                module = line.split(" ")[1].replace("\n","").replace(",","")
+                                if "." in module:
+                                    module = module[:module.find(".")]
+                                if module not in all_files and module not in PYTHON_INNER_LIB and module:
+                                    module_set.add(module)
+    return list(module_set)
 
-    packs = []
-    for pack_name in all_pack_name:
-        if pack_name not in PYTHON_INNER_LIB and pack_name not in find_file_name(project_path):
-            # print(pack_name)
-            packs.append(pack_name)
-    return packs
+
+    # packs = []
+    # for pack_name in all_pack_name:
+    #     if pack_name not in PYTHON_INNER_LIB and pack_name not in find_file_name(project_path):
+    #         # print(pack_name)
+    #         packs.append(pack_name)
+    # return packs
 
 def filters(packs,version_list):
     packs1=[]
@@ -558,12 +564,12 @@ def find_file_name(project_path):
 if __name__ == '__main__':
     project_path = r'D:\svn\tesla_branch\tesla'
     import time
-    s = time.time()
+    st = time.time()
     packs = find_package_name(project_path)
     filters(packs, version_list)
-    print("耗时:",time.time() - s, "秒")
-    # s = find_file_name(project_path)
-    # print(s)
+    s = find_file_name(project_path)
+    print(s)
+    print(time.time()-st)
 
 
 
