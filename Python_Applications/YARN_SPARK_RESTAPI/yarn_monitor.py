@@ -281,7 +281,7 @@ class YarnMonitor:
             for app in self.bad_apps:
                 msg += "user: %(user)s, name: %(name)s, id: %(id)s <p>" % app
                 msg_weixin = "你的任务超过{0}G，超过{0}G请在如下目录中添加你的任务名(name的值)：\n".format(str(USER_MEMORY/1024))  + \
-                             "/data/tesla/day_list （10.2.5.37）\n" \
+                             "/data/tesla/day_list （192.168.1.37）\n" \
                               "user: %(user)s, name: %(name)s, id: %(id)s " % app
                 mail_ToWho.append(app["user"] + "@intsig.net")
                 alarm('weixin', app["user"], msg_weixin)
@@ -294,7 +294,7 @@ class YarnMonitor:
                 alarm('weixin', user, msg_weixin)
             msg = "<font color='red'>如下任务不加白名单超过4次自动kill !!!</font><p>" \
                   "下面这些家伙资源超过{0}G啦，我们没资源用啦!!!如果实在需要过{0}G" \
-                  "资源，在机器下的/data/tesla/day_list （10.2.5.37）中添加你的任务名(name的值)<p>{1}<p>".format(str(USER_MEMORY/1024), msg) if msg else ''
+                  "资源，在机器下的/data/tesla/day_list （192.168.1.37）中添加你的任务名(name的值)<p>{1}<p>".format(str(USER_MEMORY/1024), msg) if msg else ''
             msg1 = "<font color='red'>下面这些家伙总资源开超了%sG，10分钟后依然超过(且集群总可用资源小于%s%%)，kill这些家伙全部任务!!!" \
                    "（真有需要请联系付同、曾政，并告知原因）</font><p>%s<p>" % (str(USER_MEMORY_TOTAL/1024), str(100-RESOURCE_OCCUPANCY*100), msg1) if msg1 else ''
             self.__deal_warning("memory out of %sG, or user total memory out of %sG" % (str(USER_MEMORY/1024), str(USER_MEMORY_TOTAL/1024)), msg + msg1)

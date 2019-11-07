@@ -11,7 +11,7 @@ from requests import ConnectionError
 from requests.auth import HTTPBasicAuth
 AUTH = HTTPBasicAuth('admin', 'admin') # 登陆用户名密码
 MONITOR_DICT = {
-    '10.2.5.72': ('hbase', 'HBASETHRIFTSERVER', 1024)
+    '192.168.1.72': ('hbase', 'HBASETHRIFTSERVER', 1024)
 }
 
 
