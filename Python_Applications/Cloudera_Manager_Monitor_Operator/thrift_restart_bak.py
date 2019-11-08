@@ -2,7 +2,7 @@
 # -*- coding:utf-8 -*-
 
 """
-:Description: Thrift内存监控和重启Thrift Server接口  (通过POST模拟页面点击来实现)
+:Description: Thrift内存监控和重启Thrift Server接口  (通过POST模拟页面点击来实现)  本代码弃用->使用REST API更方便
 :Owner: jiajing_qu
 :Create time: 2019/8/28 10:55
 """
@@ -14,15 +14,15 @@ sys.setdefaultencoding('utf-8')
 
 
 THRIFT_SERVER_RESTART_URLS = {
-'5063':'http://centos-bigdata-test-cdh-5063.intsig.internal:7180/cmf/services/26/instances/168/do?id=168&confirm=on&command=Restart',
-'5064':'http://centos-bigdata-test-cdh-5063.intsig.internal:7180/cmf/services/26/instances/105/do?id=105&confirm=on&command=Restart',
-'5065':'http://centos-bigdata-test-cdh-5063.intsig.internal:7180/cmf/services/26/instances/136/do?id=136&confirm=on&command=Restart'
+'ip':'http://cm-ip:7180/cmf/services/26/instances/168/do?id=168&confirm=on&command=Restart',
+'ip':'http://cm-ip:7180/cmf/services/26/instances/105/do?id=105&confirm=on&command=Restart',
+'ip':'http://cm-ip:7180/cmf/services/26/instances/136/do?id=136&confirm=on&command=Restart'
 }
 AUTH =  HTTPBasicAuth('admin', 'admin') # 登陆用户名密码
 
-request_url = 'http://192.168.1.63:7180/api/v1/clusters/Cluster%201/services/hbase/roleCommands/restart'
+request_url = 'http://192.168.1.101:7180/api/v1/clusters/Cluster%201/services/hbase/roleCommands/restart'
 
-def get_role_ip(ip):  # ip = '192.168.1.72'  URL = 'http://192.168.1.72:7180/api/v6/timeseries?query=select+mem_rss+where+entityName%3D%22hbase-HBASETHRIFTSERVER-069864e2c5350de72b0b2c13f67db2fa%22'
+def get_role_ip(ip):  # ip = '192.168.1.101'  URL = 'http://192.168.1.101:7180/api/v6/timeseries?query=select+mem_rss+where+entityName%3D%22hbase-HBASETHRIFTSERVER-069864e2c5350de72b0b2c13f67db2fa%22'
     """
     从主机器ip获取所有组件的role_name和对应机器的IP地址
     :param ip: 主机器IP
@@ -98,9 +98,9 @@ def restart_hbase_thrift_server(request_url,session,cookie,username='admin',pass
                     'Connection': 'keep-alive',
                     'Content-Length': '26',
                     'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-                    'Host': '192.168.1.63:7180',
-                    'Origin': 'http://192.168.1.63:7180',
-                    'Referer': 'http://192.168.1.63:7180/cmf/services/26/instances/168/status',
+                    'Host': '192.168.1.101:7180',
+                    'Origin': 'http://192.168.1.101:7180',
+                    'Referer': 'http://192.168.1.101:7180/cmf/services/26/instances/168/status',
                     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.146 Safari/537.36',
                     'X-Requested-With': 'XMLHttpRequest'
                     }
@@ -119,7 +119,7 @@ def restart_hbase_thrift_server(request_url,session,cookie,username='admin',pass
 
 @auto_batch2()
 def main(para=None):
-    # THRIFT_RESTART_URL = 'http://centos-bigdata-test-cdh-5063.intsig.internal:7180/cmf/services/26/instances/168/do?id=168&confirm=on&command=Restart'
+    # THRIFT_RESTART_URL = 'http://cm-ip:7180/cmf/services/26/instances/168/do?id=168&confirm=on&command=Restart'
     # restart_hbase_thrift_server(THRIFT_RESTART_URL)
     ip = str(para.get('ip'))
     pass

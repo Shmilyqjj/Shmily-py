@@ -11,7 +11,6 @@ import commands
 import datetime
 from airflow import models
 from airflow import settings
-from tesla.common.utility.para_deal import auto_batch2
 dag_bag = models.DagBag(settings.DAGS_FOLDER)
 results = set()  # 用于暂存结果
 clear_tasks = {}

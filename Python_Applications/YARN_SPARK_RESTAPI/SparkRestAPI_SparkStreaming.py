@@ -3,7 +3,7 @@
 # https://spark.apache.org/docs/2.2.0/monitoring.html#rest-api
 # /applications/[app-id]/jobs?status=[running|succeeded|failed|unknown] list only jobs in the specific state.
 
-# 所有job：https://yarn.intsig.net/proxy/application_1565234959424_0037/api/v1/applications/application_1565234959424_0037/jobs
+# 所有job：https://yarn-ip/application_1565234959424_0037/api/v1/applications/application_1565234959424_0037/jobs
 import requests
 import time
 from requests.auth import HTTPBasicAuth
@@ -11,7 +11,7 @@ from requests.auth import HTTPBasicAuth
 count = 0 # 全局变量 记录同job running的批次数
 
 def getJSON(url):       # 得到JSON
-    res = requests.get(url,auth=HTTPBasicAuth('YarnAuth','AG9RiOZjXYrd'))   # 解决401权限问题
+    res = requests.get(url,auth=HTTPBasicAuth('admin','admin'))   # 解决401权限问题
     if res.status_code == 200:
         return res.json()
 
@@ -27,7 +27,7 @@ def getTime(JSON):      # 得到运行时间
 
 
 def main(applicationID,batchTime):
-    baseUrl = 'https://yarn.intsig.net/proxy/'+applicationID+'/api/v1/applications/'+applicationID+'/jobs'
+    baseUrl = 'https://yarn-ip/'+applicationID+'/api/v1/applications/'+applicationID+'/jobs'
      #同Job记录Running状态次数
     while True:
         if(getJSON(baseUrl+'?status=failed') != []):

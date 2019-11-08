@@ -1,5 +1,5 @@
 # encoding=utf-8
-#https://yarn.intsig.net/proxy/application_1565234959424_0037/api/v1/applications/application_1565234959424_0037/jobs
+#https://yarn-ip/application_1565234959424_0037/api/v1/applications/application_1565234959424_0037/jobs
 import  requests
 import time
 from requests.auth import HTTPBasicAuth
@@ -7,8 +7,8 @@ from requests.auth import HTTPBasicAuth
 
 
 def getJSON(applicationID): #根据applicationID获得JSON
-    # res = requests.get('https://yarn.intsig.net/proxy/'+applicationID+'/api/v1/applications/'+applicationID+'/jobs?status=running',auth=HTTPBasicAuth('YarnAuth', 'AG9RiOZjXYrd'))
-    res = requests.get('https://yarn.intsig.net/proxy/' + applicationID + '/api/v1/applications/' + applicationID + '/jobs',auth=HTTPBasicAuth('YarnAuth', 'AG9RiOZjXYrd'))
+    # res = requests.get('https://yarn-ip/'+applicationID+'/api/v1/applications/'+applicationID+'/jobs?status=running',auth=HTTPBasicAuth('admin', 'admin'))
+    res = requests.get('https://yarn-ip' + applicationID + '/api/v1/applications/' + applicationID + '/jobs',auth=HTTPBasicAuth('admin', 'admin'))
     if res.status_code == 200:
         return res.json()
 

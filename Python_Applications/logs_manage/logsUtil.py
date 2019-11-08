@@ -12,9 +12,6 @@
 find /tmp/ -maxdepth 1 -type d -mtime +1 | xargs rm -rf 
 """
 
-
-
-
 import os
 import datetime
 import time

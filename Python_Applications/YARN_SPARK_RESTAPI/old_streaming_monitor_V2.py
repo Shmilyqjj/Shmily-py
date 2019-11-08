@@ -3,13 +3,13 @@
 # https://spark.apache.org/docs/2.2.0/monitoring.html#rest-api
 # /applications/[app-id]/jobs?status=[running|succeeded|failed|unknown] list only jobs in the specific state.
 
-# 所有job：https://yarn.intsig.net/proxy/application_1565234959424_0037/api/v1/applications/application_1565234959424_0037/jobs
+# 所有job：https://yarn-ip/proxy/application_1565234959424_0037/api/v1/applications/application_1565234959424_0037/jobs
 import requests
 import time
 from requests.auth import HTTPBasicAuth
 
 def getJSON(url,*newJobId):       # 得到JSON
-    res = requests.get(url+bytes(newJobId),auth=HTTPBasicAuth('YarnAuth','AG9RiOZjXYrd'))   # 解决401权限问题
+    res = requests.get(url+bytes(newJobId),auth=HTTPBasicAuth('admin','admin'))   # 解决401权限问题
     if res.status_code == 200:
         return res.json()
     if res.text == 'unknown job: '+bytes(newJobId):
@@ -28,7 +28,7 @@ def getTime(JSON):      # 得到运行时间
 
 def main(applicationID,newJobId):
     while True:
-        Url = 'https://yarn.intsig.net/proxy/'+applicationID+'/api/v1/applications/'+applicationID+'/jobs'
+        Url = 'https://yarn-ip/'+applicationID+'/api/v1/applications/'+applicationID+'/jobs'
         dict = getJSON(Url,newJobId)
         result = getTime(dict)
         newJobId = newJobId + 1
