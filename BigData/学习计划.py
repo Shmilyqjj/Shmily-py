@@ -8,7 +8,7 @@ Date: 2019/9/14 10:07
 
 """
 week_1
-airflow相关学习       官网、tesla代码（job_dags_new）   已沟通     1天
+airflow相关学习       官网、job_dags_new   已沟通     1天
 spark2.4学习，        官网相关参数了解                  已沟通     2天
 phoenix相关使用       网上教程                          已沟通     1天
 hbase导数流程优化     付同配合                          已沟通     1天
@@ -19,8 +19,8 @@ Structed Streaming 原理及使用 2天  消费延迟
 Alluxio调研                   2天
 
 week_3
-Structed Streaming学习使用	重构cdbp2hive_steaming为python（已有代码整理即可）、airflow全局clear代码完善	已沟通	可优化现有streaming代码	1天							
-phoenix、以及hbase shell熟悉学习	官网相关api /tesla代码	已沟通	熟悉hbase shell可做日常维护	2天	
+Structed Streaming学习使用	重构steaming为python（已有代码整理即可）、airflow全局clear代码完善	已沟通	可优化现有streaming代码	1天							
+phoenix、以及hbase shell熟悉学习	官网相关api /项目代码	已沟通	熟悉hbase shell可做日常维护	2天	
 Alluxio调研 	了解Alluxio和集群的整合	已沟通	了解Alluxio的优势，以及运用场景	2天	
 
 

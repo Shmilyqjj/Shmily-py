@@ -3,7 +3,7 @@
 import  requests
 import time
 from requests.auth import HTTPBasicAuth
-# from tesla.business.cluster_manage.yarn_monitor import YarnSpider
+
 
 
 def getJSON(applicationID): #根据applicationID获得JSON
