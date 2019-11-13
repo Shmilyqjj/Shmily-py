@@ -1,0 +1,5 @@
+2019-11-13 18:14:34,832 - C:/Users/jiajing_qu/PycharmProjects/Shmily-py/Python_Study/BaseLearning/Exception_Logging/logging_test.py[line:111] - DEBUG: debug
+2019-11-13 18:14:34,834 - C:/Users/jiajing_qu/PycharmProjects/Shmily-py/Python_Study/BaseLearning/Exception_Logging/logging_test.py[line:112] - INFO: info
+2019-11-13 18:14:34,834 - C:/Users/jiajing_qu/PycharmProjects/Shmily-py/Python_Study/BaseLearning/Exception_Logging/logging_test.py[line:113] - WARNING: 警告
+2019-11-13 18:14:34,834 - C:/Users/jiajing_qu/PycharmProjects/Shmily-py/Python_Study/BaseLearning/Exception_Logging/logging_test.py[line:114] - ERROR: 报错
+2019-11-13 18:14:34,835 - C:/Users/jiajing_qu/PycharmProjects/Shmily-py/Python_Study/BaseLearning/Exception_Logging/logging_test.py[line:115] - CRITICAL: 严重

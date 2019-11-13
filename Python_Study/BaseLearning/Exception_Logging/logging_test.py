@@ -32,10 +32,14 @@ level 设置日志输出级别
 stream 定义输出流，用来初始化 StreamHandler 对象，不能 filename 参数一起使用，否则会ValueError 异常
 handles 定义处理器，用来创建 Handler 对象，不能和 filename 、stream 参数一起使用，否则也会抛出 ValueError 异常
 
-
+参考 https://www.cnblogs.com/nancyzhu/p/8551506.html
 """
 
 def logging_print():
+    """
+    将日志筛选并写入文件
+    :return:
+    """
     logging.basicConfig(filename="test.log", filemode="a", format="%(asctime)s %(name)s:%(levelname)s:%(message)s",
                         datefmt="%d-%M-%Y %H:%M:%S", level=logging.DEBUG)    # 会将DEBUG级别及以上的日志记录写入文件
     logging.debug('This is a debug message')
@@ -45,6 +49,10 @@ def logging_print():
     logging.critical('This is a critical message')
 
 def exception_logging_print():
+    """
+    日志打印到控制台
+    :return:
+    """
     f = lambda x, y: x / y
     try:
         f(6,0)
@@ -58,10 +66,51 @@ def exception_logging_print():
         logging.log(level=logging.DEBUG, msg="Exception occurred", exc_info=True)
 
 
+# 既可写日志到文件又可以输出到控制台
+from logging import handlers
+class Logger(object):
+    """
+     既可写日志到文件又可以输出到控制台
+    """
+    # 日志级别关系映射
+    level_relations = {
+        'debug':logging.DEBUG,
+        'info':logging.INFO,
+        'warning':logging.WARNING,
+        'error':logging.ERROR,
+        'crit':logging.CRITICAL
+    }
 
+    def __init__(self,filename,level='info',when='D',backCount=3,fmt='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s: %(message)s'):
+        self.logger = logging.getLogger(filename)
+        format_str = logging.Formatter(fmt)#设置日志格式
+        self.logger.setLevel(self.level_relations.get(level))#设置日志级别
+        sh = logging.StreamHandler()#往屏幕上输出
+        sh.setFormatter(format_str) #设置屏幕上显示的格式
+        th = handlers.TimedRotatingFileHandler(filename=filename,when=when,backupCount=backCount,encoding='utf-8')#往文件里写入#指定间隔时间自动生成文件的处理器
+        #实例化TimedRotatingFileHandler
+        #interval是时间间隔，backupCount是备份文件的个数，如果超过这个个数，就会自动删除，when是间隔的时间单位，单位有以下几种：
+        # S 秒
+        # M 分
+        # H 小时、
+        # D 天、
+        # W 每星期（interval==0时代表星期一）
+        # midnight 每天凌晨
+        th.setFormatter(format_str)#设置文件里写入的格式
+        self.logger.addHandler(sh) #把对象加到logger里
+        self.logger.addHandler(th)
 
 
 if __name__ == '__main__':
-    # logging_print()
+    logging_print()   # 写文件
     print("#######################################")
-    exception_logging_print()
+    exception_logging_print()    # 写控制台
+    print("#######################################")
+    # 写文件和输出控制台
+    log = Logger('test1.log',level='debug')
+    log.logger.debug('debug')
+    log.logger.info('info')
+    log.logger.warning('警告')
+    log.logger.error('报错')
+    log.logger.critical('严重')
+    Logger('error.log', level='error').logger.error('error')
