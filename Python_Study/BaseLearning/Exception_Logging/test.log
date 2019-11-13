@@ -1,0 +1,104 @@
+13-14-2019 14:14:25 __main__:DEBUG:This is a debug message
+13-14-2019 14:14:25 __main__:INFO:This is an info message
+13-14-2019 14:14:25 __main__:WARNING:This is a warning message
+13-14-2019 14:14:25 __main__:ERROR:This is an error message
+13-14-2019 14:14:25 __main__:CRITICAL:This is a critical message
+13-14-2019 14:14:25 root:ERROR:Exception occurred
+Traceback (most recent call last):
+  File "C:/Users/jiajing_qu/PycharmProjects/Shmily-py/Python_Study/BaseLearning/Exception_Logging/logging_test.py", line 49, in exception_logging_print
+    f(6,0)
+  File "C:/Users/jiajing_qu/PycharmProjects/Shmily-py/Python_Study/BaseLearning/Exception_Logging/logging_test.py", line 47, in <lambda>
+    f = lambda x, y: x / y
+ZeroDivisionError: integer division or modulo by zero
+13-14-2019 14:14:27 root:ERROR:Exception occurred
+Traceback (most recent call last):
+  File "C:/Users/jiajing_qu/PycharmProjects/Shmily-py/Python_Study/BaseLearning/Exception_Logging/logging_test.py", line 49, in exception_logging_print
+    f(6,0)
+  File "C:/Users/jiajing_qu/PycharmProjects/Shmily-py/Python_Study/BaseLearning/Exception_Logging/logging_test.py", line 47, in <lambda>
+    f = lambda x, y: x / y
+ZeroDivisionError: integer division or modulo by zero
+13-14-2019 14:14:29 root:DEBUG:Exception occurred
+Traceback (most recent call last):
+  File "C:/Users/jiajing_qu/PycharmProjects/Shmily-py/Python_Study/BaseLearning/Exception_Logging/logging_test.py", line 49, in exception_logging_print
+    f(6,0)
+  File "C:/Users/jiajing_qu/PycharmProjects/Shmily-py/Python_Study/BaseLearning/Exception_Logging/logging_test.py", line 47, in <lambda>
+    f = lambda x, y: x / y
+ZeroDivisionError: integer division or modulo by zero
+13-15-2019 14:15:09 root:DEBUG:This is a debug message
+13-15-2019 14:15:09 root:INFO:This is an info message
+13-15-2019 14:15:09 root:WARNING:This is a warning message
+13-15-2019 14:15:09 root:ERROR:This is an error message
+13-15-2019 14:15:09 root:CRITICAL:This is a critical message
+13-15-2019 14:15:09 root:ERROR:Exception occurred
+Traceback (most recent call last):
+  File "C:/Users/jiajing_qu/PycharmProjects/Shmily-py/Python_Study/BaseLearning/Exception_Logging/logging_test.py", line 48, in exception_logging_print
+    f(6,0)
+  File "C:/Users/jiajing_qu/PycharmProjects/Shmily-py/Python_Study/BaseLearning/Exception_Logging/logging_test.py", line 46, in <lambda>
+    f = lambda x, y: x / y
+ZeroDivisionError: integer division or modulo by zero
+13-15-2019 14:15:11 root:ERROR:Exception occurred
+Traceback (most recent call last):
+  File "C:/Users/jiajing_qu/PycharmProjects/Shmily-py/Python_Study/BaseLearning/Exception_Logging/logging_test.py", line 48, in exception_logging_print
+    f(6,0)
+  File "C:/Users/jiajing_qu/PycharmProjects/Shmily-py/Python_Study/BaseLearning/Exception_Logging/logging_test.py", line 46, in <lambda>
+    f = lambda x, y: x / y
+ZeroDivisionError: integer division or modulo by zero
+13-15-2019 14:15:13 root:DEBUG:Exception occurred
+Traceback (most recent call last):
+  File "C:/Users/jiajing_qu/PycharmProjects/Shmily-py/Python_Study/BaseLearning/Exception_Logging/logging_test.py", line 48, in exception_logging_print
+    f(6,0)
+  File "C:/Users/jiajing_qu/PycharmProjects/Shmily-py/Python_Study/BaseLearning/Exception_Logging/logging_test.py", line 46, in <lambda>
+    f = lambda x, y: x / y
+ZeroDivisionError: integer division or modulo by zero
+13-16-2019 14:16:26 root:DEBUG:This is a debug message
+13-16-2019 14:16:26 root:INFO:This is an info message
+13-16-2019 14:16:26 root:WARNING:This is a warning message
+13-16-2019 14:16:26 root:ERROR:This is an error message
+13-16-2019 14:16:26 root:CRITICAL:This is a critical message
+13-16-2019 14:16:26 root:ERROR:Exception occurred
+Traceback (most recent call last):
+  File "C:/Users/jiajing_qu/PycharmProjects/Shmily-py/Python_Study/BaseLearning/Exception_Logging/logging_test.py", line 48, in exception_logging_print
+    f(6,0)
+  File "C:/Users/jiajing_qu/PycharmProjects/Shmily-py/Python_Study/BaseLearning/Exception_Logging/logging_test.py", line 46, in <lambda>
+    f = lambda x, y: x / y
+ZeroDivisionError: integer division or modulo by zero
+13-16-2019 14:16:28 root:ERROR:Exception occurred
+Traceback (most recent call last):
+  File "C:/Users/jiajing_qu/PycharmProjects/Shmily-py/Python_Study/BaseLearning/Exception_Logging/logging_test.py", line 48, in exception_logging_print
+    f(6,0)
+  File "C:/Users/jiajing_qu/PycharmProjects/Shmily-py/Python_Study/BaseLearning/Exception_Logging/logging_test.py", line 46, in <lambda>
+    f = lambda x, y: x / y
+ZeroDivisionError: integer division or modulo by zero
+13-16-2019 14:16:30 root:DEBUG:Exception occurred
+Traceback (most recent call last):
+  File "C:/Users/jiajing_qu/PycharmProjects/Shmily-py/Python_Study/BaseLearning/Exception_Logging/logging_test.py", line 48, in exception_logging_print
+    f(6,0)
+  File "C:/Users/jiajing_qu/PycharmProjects/Shmily-py/Python_Study/BaseLearning/Exception_Logging/logging_test.py", line 46, in <lambda>
+    f = lambda x, y: x / y
+ZeroDivisionError: integer division or modulo by zero
+13-16-2019 14:16:35 root:DEBUG:This is a debug message
+13-16-2019 14:16:35 root:INFO:This is an info message
+13-16-2019 14:16:35 root:WARNING:This is a warning message
+13-16-2019 14:16:35 root:ERROR:This is an error message
+13-16-2019 14:16:35 root:CRITICAL:This is a critical message
+13-16-2019 14:16:35 root:ERROR:Exception occurred
+Traceback (most recent call last):
+  File "C:/Users/jiajing_qu/PycharmProjects/Shmily-py/Python_Study/BaseLearning/Exception_Logging/logging_test.py", line 48, in exception_logging_print
+    f(6,0)
+  File "C:/Users/jiajing_qu/PycharmProjects/Shmily-py/Python_Study/BaseLearning/Exception_Logging/logging_test.py", line 46, in <lambda>
+    f = lambda x, y: x / y
+ZeroDivisionError: integer division or modulo by zero
+13-16-2019 14:16:37 root:ERROR:Exception occurred
+Traceback (most recent call last):
+  File "C:/Users/jiajing_qu/PycharmProjects/Shmily-py/Python_Study/BaseLearning/Exception_Logging/logging_test.py", line 48, in exception_logging_print
+    f(6,0)
+  File "C:/Users/jiajing_qu/PycharmProjects/Shmily-py/Python_Study/BaseLearning/Exception_Logging/logging_test.py", line 46, in <lambda>
+    f = lambda x, y: x / y
+ZeroDivisionError: integer division or modulo by zero
+13-16-2019 14:16:39 root:DEBUG:Exception occurred
+Traceback (most recent call last):
+  File "C:/Users/jiajing_qu/PycharmProjects/Shmily-py/Python_Study/BaseLearning/Exception_Logging/logging_test.py", line 48, in exception_logging_print
+    f(6,0)
+  File "C:/Users/jiajing_qu/PycharmProjects/Shmily-py/Python_Study/BaseLearning/Exception_Logging/logging_test.py", line 46, in <lambda>
+    f = lambda x, y: x / y
+ZeroDivisionError: integer division or modulo by zero
