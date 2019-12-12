@@ -30,7 +30,7 @@ class MongoOperation(object):
         """
         初始化类
         :param host:  mongo host
-        :param port:  mongo端口
+        :param port:  mongo端口  int类型
         :param user:  连接的用户
         :param password:  密码
         :param db:  db
@@ -140,3 +140,14 @@ class MongoOperation(object):
         feedCol = self.getTable()
         feedCol.update_many(condition)
 
+    def get_mongo_jdbc_count(self):
+        """
+        mongo JDBC获取到的数据量统计
+        :return:
+        """
+        st = time.time()
+        collection = self.getTable()
+        mongo_jdbc_count = collection.count()
+        et = time.time()
+        print("检测到Mongo collection数据量: %s  耗时: %s" % (mongo_jdbc_count, et - st))
+        return mongo_jdbc_count
