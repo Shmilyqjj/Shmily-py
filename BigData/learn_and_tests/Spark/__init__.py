@@ -6,6 +6,10 @@
 :Owner: jiajing_qu
 :Create time: 2019/9/10 14:26
 """
+"""
+PYSPARK_DRIVER_PYTHON=ipython $SPARK_HOME/bin/pyspark
+"""
+
 
 """
 原理部分:
