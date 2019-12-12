@@ -2,7 +2,7 @@
 # -*- coding:utf-8 -*-
 
 """
-:Description: MongoDB 工具类  未完成
+:Description: MongoDB 工具类
 :Owner: jiajing_qu
 :Create time: 2019/11/1 14:04
 """
