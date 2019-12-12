@@ -2,7 +2,7 @@
 # -*- coding:utf-8 -*-
 
 """
-:Description: 处理复杂结构体中的type的代码
+:Description: 处理复杂结构体中的type的代码  hive 结构体类型语句处理逻辑 自动对_id这样的结构体中字段加反引号
 :Owner: jiajing_qu
 :Create time: 2019/12/12 10:28
 """
