@@ -25,11 +25,8 @@ import os
 # print(sorted(list0))
 # print(sorted(list0,reverse=True))
 
+##############################################################################
 
-"""
-
-
-"""
 # p = [1,2,4,5,6,7]
 # def abc(paras):
 #     def cde(paras):
@@ -48,8 +45,60 @@ import os
 #                     file_list.append(name)
 #     return file_list
 
+##############################################################################
 
-if __name__ == '__main__':
-    # abc(p)
-    pass
+import pyspark
+# class A(object):
+#     """
+#     Class A.
+#     """
+#
+#     a = 0
+#     b = 1
+#
+#     def __init__(self):
+#         self.a = 2
+#         self.b = 3
+#
+#     def test(self):
+#         print 'a normal func.'
+#
+#     @staticmethod
+#     def static_test(self):
+#         print 'a static func.'
+#
+#     @classmethod
+#     def class_test(self):
+#         print 'a calss func.'
+#
+# if __name__ == '__main__':
+#     # abc(p)
+#     pass
+#     a = A()
+#     print A.__dict__
+#     # print a.__dict__
+#     print(hasattr(a, '__doc__'))
+#     print(a.__dict__)
+#     m = getattr(a, 'test')
+#     m()
+
+##############################################################################
+
+# import traceback
+# import sys
+# reload(sys)
+# sys.setdefaultencoding('utf8')
+#
+# def a():
+#     a =  '\n'.join(traceback.format_stack())
+#     print(a)
+#     print(type(a))
+#
+# def b():
+#     a()
+# if __name__ == '__main__':
+#     b()
+
+##############################################################################
+
 
