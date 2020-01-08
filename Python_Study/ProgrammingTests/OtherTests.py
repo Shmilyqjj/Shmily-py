@@ -84,20 +84,7 @@ import pyspark
 
 ##############################################################################
 
-# import traceback
-# import sys
-# reload(sys)
-# sys.setdefaultencoding('utf8')
-#
-# def a():
-#     a =  '\n'.join(traceback.format_stack())
-#     print(a)
-#     print(type(a))
-#
-# def b():
-#     a()
-# if __name__ == '__main__':
-#     b()
+
 
 ##############################################################################
 
