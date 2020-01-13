@@ -60,6 +60,9 @@ print(datetime.datetime.fromtimestamp(t))
 str_to_dt = datetime.datetime.strptime('2019-10-1 18:19:59', '%Y-%m-%d %H:%M:%S')
 print(str_to_dt)
 
+# 字符串转ts
+# batch_time_stamp = int(time.mktime(datetime.datetime.strptime(batch, "%Y%m%d%H%M").timetuple()))
+
 #格式化时间,多加一天,减一天 加小时,减分钟
 n = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
 print ('+1 day',(datetime.datetime.now()+datetime.timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S"))
