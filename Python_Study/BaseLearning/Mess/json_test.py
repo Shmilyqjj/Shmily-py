@@ -2,7 +2,7 @@
 # -*- coding:utf-8 -*-
 
 """
-:Description: json库常用方法
+:Description: json库 常用方法
 :Owner: jiajing_qu
 """
 import json
