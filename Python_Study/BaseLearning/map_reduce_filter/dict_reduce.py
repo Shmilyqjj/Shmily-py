@@ -7,8 +7,6 @@ Date: 2020/1/16 22,36
 """
 
 # 方法1
-from functools import reduce
-
 # import pandas
 # example = [["qjj","男"],["zxw","女"],["qjj","优秀"],["qjj","牛逼"],["qjj","棒棒"],["zxw","不优秀"],["zxw","不棒棒"],["cci","很强"],["cci","发展"],["cci","666"]]
 # pandas_df = pandas.DataFrame(example, columns=['name','desc'])  # pandas接收一个list  转df
