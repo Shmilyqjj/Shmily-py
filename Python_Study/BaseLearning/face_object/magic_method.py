@@ -169,7 +169,9 @@ class MyWithOpen(object):
         self.f.close()
         print("文件关闭")
 
-
+def str_contains():
+    print('dawdawqjj3424'.__contains__('qjj'))
+    print('dawdawqjj3424'.__contains__('123'))
 
 if __name__ == '__main__':
     func1()
@@ -188,6 +190,8 @@ if __name__ == '__main__':
     print(ias[1:])  # 得到索引1之后的
     ias[2] = 11  # __setitem__
     del ias[0]
+
+    str_contains()
 
     with MyWithOpen("""C:\Users\jiajing_qu\PycharmProjects\Shmily-py\Python_Study\BaseLearning\Exception_Logging\\\\test.log""",'r') as f:
         print(f.read())
