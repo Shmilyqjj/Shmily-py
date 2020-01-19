@@ -1,0 +1,10 @@
+：我的python脚本模板
+#!/usr/bin/env python
+# encoding: utf-8
+"""
+:Author: jiajing_qu
+:Create Time: ${DATE} ${TIME}
+:@File: ${NAME}.py
+:@Software: ${PRODUCT_NAME}
+:@Site: shmily-qjj.top
+"""
