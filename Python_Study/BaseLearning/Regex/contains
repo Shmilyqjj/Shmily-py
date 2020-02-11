@@ -1,0 +1,28 @@
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+
+"""
+:Description:  判断包含
+:Owner: jiajing_qu
+:Create time: 2020/02/11 15:28
+"""
+import re
+
+str1 = 'qjjabc'
+
+# 判断字符串包含
+# 方法1
+print("710552907qjjabczxwhaha2333".__contains__(str1))
+# 方法2
+print(True if re.findall('qjj', str1) else False)
+
+# 方法3
+print(str1.find('qjj') >= 0)
+
+"""
+##################################################
+"""
+
+# 判断list set dict包含
+print('qjj' in ['zxw','qjj'])
+print('qjj' in {'zxw': 'female', 'qjj': 'male'})
