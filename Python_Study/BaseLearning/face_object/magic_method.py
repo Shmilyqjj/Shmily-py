@@ -7,6 +7,7 @@
 :Create time: 2019/9/8 23:12
 """
 import time
+import traceback
 # 参考https://blog.csdn.net/Mr_fengzi/article/details/93360845
 
 def func1():
@@ -169,6 +170,13 @@ class MyWithOpen(object):
         self.f.close()
         print("文件关闭")
 
+def try_to_import(module_name):
+    try:
+        __import__(module_name)
+        print("try_to_import")
+    except:
+        traceback.print_exc(1)
+
 def str_contains():
     print('dawdawqjj3424'.__contains__('qjj'))
     print('dawdawqjj3424'.__contains__('123'))
@@ -193,5 +201,10 @@ if __name__ == '__main__':
 
     str_contains()
 
-    with MyWithOpen("""C:\Users\jiajing_qu\PycharmProjects\Shmily-py\Python_Study\BaseLearning\Exception_Logging\\\\test.log""",'r') as f:
-        print(f.read())
+    # with MyWithOpen("""C:\Users\jiajing_qu\PycharmProjects\Shmily-py\Python_Study\BaseLearning\Exception_Logging\\\\test.log""",'r') as f:
+    #     print(f.read())
+
+    try_to_import('aaa')
+    try_to_import('os')
+
+
