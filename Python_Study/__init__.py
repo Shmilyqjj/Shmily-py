@@ -9,10 +9,10 @@ example: pip install -i https://pypi.tuna.tsinghua.edu.cn/simple pymysql
 #!/usr/bin/env python
 # encoding: utf-8
 """
+:Description:
 :Author: jiajing_qu
 :Create Time: ${DATE} ${TIME}
-:@File: ${NAME}.py
-:@Software: ${PRODUCT_NAME}
-:@Site: shmily-qjj.top
+:File: ${NAME}.py
+:Site: shmily-qjj.top
 """
 ######################################
