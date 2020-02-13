@@ -192,6 +192,17 @@ def getattrbute_test():
     ias = index_and_slice()
     attr = ias.__getattribute__("count")  # 获取到类中的属性、方法
     print(attr(1,1))
+    # Python中只要定义了继承object的类，就默认存在属性拦截器，只不过是拦截后没有进行任何操作，而是直接返回。
+    # 所以我们可以自己改写__getattribute__方法来实现相关功能，比如查看权限、打印log日志等
+    class A(object):
+        def __init__(self, k):
+            self.k = k
+            print("init %s" % k)
+        def __getattribute__(self, item):
+            print("重写了__getattribute__")
+            return object.__getattribute__(self, item)
+    a = A("1")
+    print(a.k)
 
 if __name__ == '__main__':
     func1()
