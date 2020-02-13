@@ -143,6 +143,9 @@ __delitem__方法可以删除制定索引值
         del self.l[index]
         print("删除后的list值为： [%s]" % ','.join(map(lambda x: str(x),self.l)))
 
+    def count(self, a, b):
+        print(a+b)
+
 
 
 """
@@ -181,6 +184,15 @@ def str_contains():
     print('dawdawqjj3424'.__contains__('qjj'))
     print('dawdawqjj3424'.__contains__('123'))
 
+def getattrbute_test():
+    """
+    https://blog.csdn.net/yitiaodashu/article/details/78974596
+    :return:
+    """
+    ias = index_and_slice()
+    attr = ias.__getattribute__("count")  # 获取到类中的属性、方法
+    print(attr(1,1))
+
 if __name__ == '__main__':
     func1()
     a = A()
@@ -206,5 +218,7 @@ if __name__ == '__main__':
 
     try_to_import('aaa')
     try_to_import('os')
+
+    getattrbute_test()
 
 
