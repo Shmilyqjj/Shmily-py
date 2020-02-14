@@ -45,15 +45,22 @@ __del__为析构方法，对象删除时，自动调用，注意：当程序运�
 """
 
 class A(object):
-    def __new__(cls, *args, **kwargs):
-        print('正在new一个A类的对象')
-        time.sleep(2)
-        # 直接返回父类的new方法 对象生成是在 new 里面 的return （返回一个对象）
-        return  super(A, cls).__new__(cls)
 
-    def __init__(self):
+    def __init__(self, c, day):
+        self.day = day
+        self.c = c
         print("正在初始化和完善对象")
         time.sleep(2)
+        print(self.day)
+
+    def __new__(cls, *args):
+        print(args)
+        if args[len(args)-1] == -1:
+            print("new中得到参数-1 返回")
+            return
+        else:
+            # 直接返回父类的new方法 对象生成是在 new 里面 的return （返回一个对象）
+            return super(A, cls).__new__(cls)
 
     def __del__(self):
         print("正在删除对象")
@@ -206,7 +213,10 @@ def getattrbute_test():
 
 if __name__ == '__main__':
     func1()
-    a = A()
+    a = A(2, -1)
+    a = A(2, 1)
+
+    print("*****************************")
 
     cwos = ClassWithoutStr()
     cws = ClassWithStr('qjj')
