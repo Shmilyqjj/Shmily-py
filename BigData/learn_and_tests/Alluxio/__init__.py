@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding:utf-8 -*-
 """
-Description:存放依赖包
+Description: Alluxio Python Api
 Author:曲佳境
-Date: 2019/12/14 1:11
+Date: 2019/11/16 12:48
 """
