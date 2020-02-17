@@ -12,7 +12,7 @@ example: pip install -i https://pypi.tuna.tsinghua.edu.cn/simple pymysql
 :Description:
 :Author: jiajing_qu
 :Create Time: ${DATE} ${TIME}
-:File: ${NAME}.py
+:File: ${NAME}
 :Site: shmily-qjj.top
 """
 ######################################
