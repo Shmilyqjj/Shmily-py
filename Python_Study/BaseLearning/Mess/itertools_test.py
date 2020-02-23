@@ -43,3 +43,6 @@ l = [1,2,3]
 s = itertools.permutations(l)
 print(list(s))
 
+# 生成器
+l = [1,2,3,4,5,6,7]
+print([i for i in l if i > 5])
