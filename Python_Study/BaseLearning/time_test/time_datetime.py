@@ -30,7 +30,7 @@ print(format_time)
 
 #字符串转时间戳
 a = "Sat Mar 28 22:24:24 2019"
-print time.mktime(time.strptime(a,"%a %b %d %H:%M:%S %Y"))
+print(time.mktime(time.strptime(a,"%a %b %d %H:%M:%S %Y")))
 
 # datetime获取当前日期和时间
 now = datetime.datetime.now()
@@ -65,8 +65,8 @@ print(str_to_dt)
 
 #格式化时间,多加一天,减一天 加小时,减分钟
 n = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
-print ('+1 day',(datetime.datetime.now()+datetime.timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S"))
-print ('-1 day',(datetime.datetime.now()+datetime.timedelta(days=-1)).strftime("%Y-%m-%d %H:%M:%S"))
+print('+1 day',(datetime.datetime.now()+datetime.timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S"))
+print('-1 day',(datetime.datetime.now()+datetime.timedelta(days=-1)).strftime("%Y-%m-%d %H:%M:%S"))
 # days改为hours minutes
 
 # datetime的差值为datedelta  计算时间差
@@ -85,7 +85,7 @@ print(d3.total_seconds()) # 秒+微秒
 # datetime转timestamp
 a = datetime.datetime.strptime("2007-06-22 00:00:00.0","%Y-%m-%d %H:%M:%S.%f")
 timeStamp = time.mktime(a.timetuple())
-print timeStamp
+print(timeStamp)
 def detect_date(date_time):
     """
     datetime转timestamp  遇到1970-01-01 00：00：00之前的时间会返回0
@@ -96,7 +96,7 @@ def detect_date(date_time):
         time_stamp = int(time.mktime(date_time.timetuple()))
         return time_stamp
     except:
-        return long(0)
+        return 0
 date_time = datetime.datetime.now()
 print(detect_date(date_time))
 date_time = datetime.datetime.strptime('1969-10-01 19:21:22', '%Y-%m-%d %H:%M:%S')
