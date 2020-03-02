@@ -260,7 +260,7 @@ def generate_mongo_spark_schema(spark, mongo_ip, mongo_port, mongo_user, mongo_p
     :param mongo_password: pwd
     :param mongo_table:  mongo表名
     :param partitions:  通过partitions个分区数 对schema进行推断 默认1000个分区
-    :return:
+    :return: schema json
     """
     def cast_mongo_timestamp(time_col):
         """
