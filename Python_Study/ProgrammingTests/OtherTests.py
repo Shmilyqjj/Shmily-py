@@ -47,7 +47,7 @@ import os
 
 ##############################################################################
 
-import pyspark
+
 # class A(object):
 #     """
 #     Class A.
@@ -83,8 +83,12 @@ import pyspark
 #     m()
 
 ##############################################################################
-
-
-
+# import json
+# fo = open(r'C:\Users\Home-PC\PycharmProjects\Shmily-py\Python_Study\ProgrammingTests\out.log', 'a+')
+# info = fo.read()
+# # print(info)
+# print(json.loads(info))
+# d = {"1":"2","2": "2"}
+# fo.write(str(d))
 ##############################################################################
 
