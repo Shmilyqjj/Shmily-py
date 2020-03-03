@@ -10,6 +10,7 @@
 from pyspark.sql.functions import udf, when, size, col
 from pyspark.sql.types import StructType, LongType
 import time
+import platform
 
 try:
     import MySQLdb
@@ -17,7 +18,6 @@ try:
 except ImportError:
     import pymysql as MySQLdb
 
-import json
 import re
 import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -73,12 +73,23 @@ SET FOREIGN_KEY_CHECKS = 1;
 # mongo与spark的数据类型映射
 mongo_spark_type_mapping = {
     # mongo type: spark type
+    "mongoose.Schema.Types.ObjectId": "string",  # 这个必须开头 顺序不能变
     "String": "string",
     "Date": "timestamp",
     "Number": "long",
     "Boolean": "boolean",
-    "mongoose.Schema.Types.ObjectId": "string",
 }
+spark_mongo_type_mapping = {v:k for k, v in mongo_spark_type_mapping.items()}
+# spark_mongo_type_mapping.update({'array<string>': 'String'})
+
+
+def delete_comment(mongo_schema_str):
+    """
+    去掉 mongo schema上的注释
+    :param mongo_schema_str:
+    :return:
+    """
+    return re.sub("//[\s\S]*?\n", "\n", mongo_schema_str)  # 去掉schema上的注释
 
 
 def trans_json(json_str):
@@ -87,12 +98,17 @@ def trans_json(json_str):
     :param json_str: 键值无双引号的json字符串
     :return: 转换好的json字符串 可以供eval或json.loads直接使用
     """
-    json_str = json_str.replace("'", "").replace(" ", "").replace('\r', '').replace('"', '')
+    json_str = json_str.replace("'", "").replace(" ", "").replace('"', '')
     need_replace = re.findall("[A-Za-z0-9_.]+", json_str)
     need_replace = set(need_replace)
     # need_replace = sorted(need_replace,key = lambda i:len(i),reverse=False)
     # print(need_replace)
-    lines_list = json_str.split('\n')
+    sys_name = platform.system()
+    if sys_name == 'Windows':
+        split_str = '\r\n'
+    else:
+        split_str = '\n'
+    lines_list = json_str.split(split_str) # linux里 \n    win里 \r\n
     result_str = ''
     for line in lines_list:
         word_list = re.findall("[A-Za-z0-9_.]+", line)
@@ -102,7 +118,9 @@ def trans_json(json_str):
                     line = re.sub(word+':', '"%s":' % word, line, count=1)
                     line = re.sub(':'+word, ':"%s"' % word, line, count=1)
                 else:
-                    line = line.replace('type:', '"type":')
+                    line = line.replace('type:', '"type":') if len(re.findall(r"(type)", line)) == 1 else\
+                    re.sub("[^_](type):", '{"type":', line, count=1)
+
         result_str += line + '\n'
     return result_str
 
@@ -132,33 +150,67 @@ def trans_json(json_str):
 #     return json_str
 
 
+def check_mongo_schema(mongo_schema_str):
+    """
+    检查mongo schema是否合理
+    :param: mongo_schema_str
+    :return: True / Error Info
+    """
+    logger.info("开始检查输入的schema格式是否正确")
+    try:
+        tmp = delete_comment(mongo_schema_str)
+        json_str = trans_json(tmp)
+        # print(json_str)  # json_str带双引号的
+        import json
+        json.loads(json_str)
+        # eval(json_str)  # eval看不到错误信息
+        logger.info("schema格式正确")
+        return True
+    except Exception as e:
+        logger.error("schema格式错误")
+        return e
+
+
+def mysql_interface(sql):
+    """
+    统一mysql入口
+    :param sql:  sql语句
+    :return:  fetchall的结果
+    """
+    try:
+        conn = MySQLdb.connect(host=MYSQL_HOST, port=MYSQL_PORT, user=MYSQL_USER, passwd=MYSQL_PWD, db=MYSQL_DB)
+        cur = conn.cursor()
+        cur.execute(sql)
+        conn.commit()
+        result = cur.fetchall()
+        return result
+    except Exception as e:
+        logger.error(e)
+    finally:
+        cur.close()
+        conn.close()
+
+
 def get_mongo_schema_in_db(table_name):
     """
     根据mongo表名 在数据库中获取到
     :param table_name:
     :return:
     """
-    res = None
-    try:
-        conn = MySQLdb.connect(host=MYSQL_HOST, port=MYSQL_PORT, user=MYSQL_USER, passwd=MYSQL_PWD, db=MYSQL_DB)
-        cur = conn.cursor()
-        cur.execute("select mongo_schema from %s where mongo_table= '%s'" % (MYSQL_TB, table_name))
-        res = cur.fetchall()
-    except Exception as e:
-        logger.error(e)
-    finally:
-        cur.close()
-        conn.close()
+    sql = "select mongo_schema from %s where mongo_table= '%s'" % (MYSQL_TB, table_name)
+    res = mysql_interface(sql)
     if res:
             schema_str = res[0][0]
-            schema_str = re.sub("//[\s\S]*?\n", "\n", schema_str)  # 去掉schema上的注释
+            schema_str = delete_comment(schema_str)
             schema_str = trans_json(schema_str)  # 对 不合法的k v 进行转换  添加引号
-            # print(schema_str)
             schema_json = {}
             try:
-                schema_json = eval(schema_str)
+                import json
+                schema_json = json.loads(schema_str)
+                # schema_json = eval(schema_str)
             except Exception as e:
-                logger.error("请检查Json格式是否正确  %s" % e)
+                logger.error(schema_str)
+                logger.error("请检查Json格式是否正确(可能是Json转换出现问题)  %s" % e)
             logger.debug(schema_json)
             return schema_json
     else:
@@ -196,7 +248,6 @@ def mongo_schema_to_spark_schema(mongo_schema_json):
       {'metadata': {}, 'name': 'time_create', 'nullable': True, 'type': 'string'},
       {'metadata': {}, 'name': 'token', 'nullable': True, 'type': 'string'}],
      'type': 'struct'},
-
     """
     field_info_list = []
     # __v和_id问题
@@ -217,25 +268,23 @@ def mongo_schema_to_spark_schema(mongo_schema_json):
             spark_data_type = mongo_spark_type_mapping.get(field_info.get('type')) if mongo_spark_type_mapping.get(field_info.get('type')) else 'string'
             field_info_list.append({'metadata': {}, 'name': field, 'nullable': True, 'type': spark_data_type})
         elif isinstance(field_info, list):
-            print(field)
-            print(field_info)
-            print(len(field_info))
-            second_info_dict = {'fields':[], 'type': 'struct'}
             # field_info  [{'type': 'String'}] or [{'eid': {'type': 'String'}, 'name': {'type': 'String'}, 'entity_type': {'type': 'Number'}, 'start_time': {'type': 'Date'}, 'expired_time': {'type': 'Date'}}]
-            for second_field_dict in field_info:  # 一般这个list只含有一个dict
-                if second_field_dict.get('type'):  # field是article_ids  second_field_dict是{'type': 'String'}
-                    mongo_type = second_field_dict.get('type')
+            if len(field_info[0]) == 1 or ('type' in field_info[0] and 'ref' in field_info[0]):  # 一般这个list只含有一个dict
+                mongo_type = field_info[0].get('type')
+                spark_type = mongo_spark_type_mapping.get(mongo_type) if mongo_spark_type_mapping.get(mongo_type) else 'string'
+                second_info_dict = spark_type
+                # print(field_info)
+            else:
+                second_info_dict = {'fields': [], 'type': 'struct'}
+                second_field_dict = field_info[0]  # 一般这个list只含有一个dict
+                # print(second_field_dict)  # field是is_fee_reminder  second_field_dict是{'biz_type': {'type': 'String'}, 'is_reminder': {'type': 'String'}}
+                for second_field in second_field_dict:
+                    second_field_info = second_field_dict[second_field]
+                    mongo_type = second_field_info.get('type')
                     spark_type = mongo_spark_type_mapping.get(mongo_type) if mongo_spark_type_mapping.get(mongo_type) else 'string'
-                    second_info_dict.get('fields').append(
-                        {'containsNull': True, 'elementType': spark_type, 'type': 'array'})
-                else:
-                    print(second_field_dict)  # field是is_fee_reminder  second_field_dict是{'biz_type': {'type': 'String'}, 'is_reminder': {'type': 'String'}}
-                    for second_field in second_field_dict:
-                        second_field_info = second_field_dict[second_field]
-                        mongo_type = second_field_info.get('type')
-                        spark_type = mongo_spark_type_mapping.get(mongo_type) if mongo_spark_type_mapping.get(
-                            mongo_type) else 'string'
-                        second_info_dict.get('fields').append({'metadata': {}, 'name': second_field, 'nullable': True, 'type': spark_type})
+                    # print(second_field)
+                    # print(second_field_info)
+                    second_info_dict.get('fields').append({'metadata': {}, 'name': second_field, 'nullable': True, 'type': spark_type})
             field_info_list.append({'metadata': {},
                                     'name': field,
                                     'nullable': True,
@@ -244,7 +293,6 @@ def mongo_schema_to_spark_schema(mongo_schema_json):
                                         'elementType': second_info_dict,
                                         'type': 'array'}
                                     })
-        # {'metadata': {}, 'name': '__v', 'nullable': True, 'type': 'long'}
     schema = {'fields': field_info_list,
               'type': 'struct'}
     return schema
@@ -313,8 +361,108 @@ def generate_mongo_spark_schema(spark, mongo_ip, mongo_port, mongo_user, mongo_p
     return schema
 
 
+def show(spark_schema_json):
+    """
+    从spark的schema json解析 字段：类型  直观显示(可以展示为树形结构 类似linux tree命令的结果)
+    用于给前端页面显示的结果
+    :param spark_schema_json:
+    :return: dict
+    """
+    field_info_list = spark_schema_json['fields']
+    result_dict = {}
+    for i in field_info_list:
+        # i有几种形式
+        # {'metadata': {}, 'name': 'app_settings', 'nullable': True, 'type': 'string'}
+        # {'metadata': {},'name': '_id','nullable': True,'type': {'fields': [{'metadata': {},'name': 'oid','nullable': True,'type': 'string'}],'type': 'struct'}}
+        # {'metadata': {}, 'name': 'packages', 'nullable': True, 'type': {'containsNull': True, 'elementType': {'fields': [{'metadata': {}, 'name': 'code', 'nullable': True, 'type': 'string'}], 'type': 'struct'}, 'type': 'array'}}
+        # {'metadata': {}, 'name': 'packages', 'nullable': True, 'type': {'containsNull': True, 'elementType': 'string', 'type': 'array'}}
+        first_type = i.get('type')
+        first_name = i.get('name')
+        if isinstance(first_type, str):
+            result_dict[first_name] = {'type': first_type, 'children' :{}}  # 没有第二级字段
+        elif isinstance(first_type, dict) and isinstance(first_type.get('elementType'), str):
+            first_type = first_type.get('elementType')
+            result_dict[first_name] = {'type': "array<%s>" % first_type, 'children' :{}}  # 没有第二级字段
+        elif first_type.get('fields') and isinstance(first_type.get('fields'), list):
+            # 这层 只会有_id.oid进来
+            second_name = first_type.get('fields')[0].get('name')
+            second_type = first_type.get('fields')[0].get('type')
+            result_dict[first_name] = {'type': "struct<%s:%s>" % (second_name, second_type), 'children' :{second_name: second_type}}
+        else:
+            # [{'metadata': {}, 'name': 'name', 'nullable': True, 'type': 'string'}, {'metadata': {}, 'name': 'eid', 'nullable': True, 'type': 'string'}]
+            fields_list = first_type.get('elementType').get('fields')
+            field_type = first_type.get('elementType').get('type')  # array or struct
+            internal_type_list = []
+            children_dict = {}
+            for info in fields_list:
+                second_name = info.get('name')
+                second_type = info.get('type')
+                internal_type_list.append('%s:%s' % (second_name, second_type))
+                children_dict[second_name] = second_type
+            result_dict[first_name] = {'type': '%s<%s>' % (field_type, ','.join(internal_type_list)), 'children': children_dict}
+    return result_dict
+
+
+def add_and_update_mongo_spark_schema(add_schema_json):
+    """
+    对已有的schema进行更新(添加字段)  add_schema_json转成mongo的schema并提交更新至数据库
+    :param add_schema_json: 与show查询出来的格式一样  如果更新 在已有基础上更新
+    :return:True 更新成功  exception更新失败
+    """
+    new_mongo_schema_str_list = []
+    new_mongo_schema = {}
+    for first_field in add_schema_json:
+        first_field_info = add_schema_json[first_field] # {'type': 'long', 'children': {}} or {'type': 'struct<oid:string>', 'children': {'oid': 'string'}}
+        children = first_field_info.get('children')
+        if first_field == '__v' or first_field == '_id':
+            pass
+        elif children == {}:
+            first_field_type = first_field_info.get('type') if first_field_info.get('type') else 'string'
+            if first_field_type == 'array<string>':
+                mongo_v = [{'type': 'String'}]
+                new_mongo_schema[first_field] = mongo_v
+                new_mongo_schema_str_list.append('%s:[\n{type : String}\n],' % first_field)
+            else:
+                mongo_type = spark_mongo_type_mapping.get(first_field_type)
+                new_mongo_schema[first_field] = {'type': mongo_type}
+                new_mongo_schema_str_list.append('%s:{ type : %s },' % (first_field, mongo_type))
+        else:
+            second_field_list = []
+            second_field_str_list = []
+            second_field_dict = {}
+            for second_field in children:
+
+                if second_field == '__v' or second_field == '_id':
+                    pass
+                else:
+                    second_field_type = children[second_field]
+                    # print(second_field_type)
+                    mongo_type = spark_mongo_type_mapping.get(second_field_type) if spark_mongo_type_mapping.get(second_field_type) else 'string'
+                    second_field_dict.update({second_field: {'type': mongo_type}})
+                    second_field_str_list.append("%s: {type: %s}," % (second_field, mongo_type))
+            second_field_list.append(second_field_dict)
+            second_field_str = '[\n{' + '\n'.join(second_field_str_list).rstrip(',') + '}\n]'
+            new_mongo_schema[first_field] = second_field_list
+            new_mongo_schema_str_list.append('%s: %s,' % (first_field, second_field_str))
+    new_mongo_schema_str = '{' + '\n'.join(new_mongo_schema_str_list).rstrip(',') + '}'
+    # new_mongo_schema_str = MySQLdb.escape_string(new_mongo_schema_str)
+    # sql = """insert into mongo_table_schema_mapping(mongo_table,mongo_schema) values ('final3',"%s")""" % new_mongo_schema
+    # print(sql)
+    # mysql_interface(sql)
+    return new_mongo_schema_str, new_mongo_schema
+
+
 if __name__ == '__main__':
     mongo_schema_json = get_mongo_schema_in_db("test_table")
-    print(mongo_schema_json)
+    print(1, str(mongo_schema_json))
     schema = mongo_schema_to_spark_schema(mongo_schema_json)
-    print(schema)
+    print(2, schema)
+    res = show(schema)
+    print(3, res)
+    new_mongo_schema_str, new_mongo_schema = add_and_update_mongo_spark_schema(res)
+    print(check_mongo_schema(new_mongo_schema_str))
+    print(new_mongo_schema_str)
+    # print(trans_json(delete_comment(new)))
+    print(check_mongo_schema(new_mongo_schema_str))
+    # mongo_schema_to_spark_schema(new)
+
