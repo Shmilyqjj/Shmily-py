@@ -306,7 +306,7 @@ def generate_mongo_spark_schema(spark, mongo_ip, mongo_port, mongo_user, mongo_p
     :param mongo_port:  port
     :param mongo_user: user
     :param mongo_password: pwd
-    :param mongo_table:  mongo表名
+    :param mongo_table:  mongo表名  database.collection格式
     :param partitions:  通过partitions个分区数 对schema进行推断 默认1000个分区
     :return: schema json
     """
@@ -351,8 +351,13 @@ def generate_mongo_spark_schema(spark, mongo_ip, mongo_port, mongo_user, mongo_p
     config.update({"uri": uri})
     config.update({
         "spark.mongodb.input.partitioner": "MongoPaginateByCountPartitioner",
-        "spark.mongodb.input.partitionerOptions.partitionKey": "_id",
+        # MongoSamplePartitioner：使用集合的平均文档大小和随机抽样来确定集合的合适分区。
+        # MongoShardedPartitioner：根据数据块对集合进行分区。需要对config数据库的读访问权限。
+        # MongoSplitVectorPartitioner：使用splitVector独立命令或主数据库上的命令来确定数据库的分区。需要特权才能运行splitVector命令
+        # MongoPaginateByCountPartitioner：创建特定数量的分区。需要查询每个分区。
+        # MongoPaginateBySizePartitioner：根据数据大小创建分区。需要查询每个分区。
         "spark.mongodb.input.partitionerOptions.numberOfPartitions": "%d" % partitions,
+        "spark.mongodb.input.partitionerOptions.partitionKey": "_id",
         "spark.mongodb.input.readPreference.name": "secondaryPreferred"
     })
     data = spark.read.format("com.mongodb.spark.sql").options(**config).load()
