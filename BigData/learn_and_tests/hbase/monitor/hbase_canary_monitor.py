@@ -7,29 +7,17 @@ HBase Canary监控报警  监控region get延迟  如果有部分region请求延
 :Create Time: 2020/3/4 14:50
 :File: hbase_canary_monitor
 :Site: shmily-qjj.top
-:etc:
-DB:
- CREATE TABLE `t_hbase_canary`  (
-  `table` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `start_key` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `ts_region` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `column_family` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `ping` int(255) NULL DEFAULT NULL,
-  `create_time` timestamp DEFAULT CURRENT_TIMESTAMP()
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
-
-mkdir /data/hbase/log/hbase_canary/
+:etc:  mkdir /data/hbase/log/hbase_canary/
 """
 
 from numpy import mean
-# import commands
+import commands
 import re
 import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 CANARY_LOG_PATH = '/data/hbase/log/hbase_canary/canary.log'
-CANARY_LOG_PATH = r'C:\Users\Home-PC\Desktop\canary.log'
 
 
 def canary_log_analyse(canary_log_path):
@@ -103,4 +91,4 @@ def deal_and_alarm(ratio=5.0, log_file='/data/hbase/log/hbase_canary/canary.log'
 
 
 if __name__ == '__main__':
-    deal_and_alarm()
+    deal_and_alarm(log_file=CANARY_LOG_PATH)
