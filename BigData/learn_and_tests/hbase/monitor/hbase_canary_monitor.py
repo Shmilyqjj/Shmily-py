@@ -2,6 +2,7 @@
 # encoding: utf-8
 """
 :Description:HBase自带监控工具 hbase org.apache.hadoop.hbase.tool.Canary 日志监控
+HBase Canary监控报警  监控region get延迟  如果有部分region请求延迟过高，报警
 :Author: jiajing_qu
 :Create Time: 2020/3/4 14:50
 :File: hbase_canary_monitor
