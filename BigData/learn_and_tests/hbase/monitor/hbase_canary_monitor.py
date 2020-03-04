@@ -56,8 +56,16 @@ def run_hbase_canary(user, host, log_file='/data/hbase/log/hbase_canary/canary.l
     :param host: 可以ssh过去并执行命令的host
     :return: True or False
     """
-    stat, output = commands.getstatusoutput('''ssh -l {user} {host} "hbase org.apache.hadoop.hbase.tool.Canary > {log_file} 2>&1"'''.format(user=user, host=host, log_file=log_file))
+    # stat, output = commands.getstatusoutput('''ssh -l {user} {host} "hbase org.apache.hadoop.hbase.tool.Canary > {log_file} 2>&1"'''.format(user=user, host=host, log_file=log_file))
+    stat, output = commands.getstatusoutput('''ssh -l {user} {host} "hbase org.apache.hadoop.hbase.tool.Canary"'''.format(user=user, host=host))
     if stat == 0:
+        try:
+            f = open(log_file, 'w')
+            f.write(output)
+            f.close()
+        except Exception as e:
+            logger.error("写文件错误：%s" % e)
+            return False
         logger.info("远程HBase Canary执行完毕")
         return True
     else:
@@ -73,7 +81,7 @@ def deal_and_alarm(ratio=5.0, log_file='/data/hbase/log/hbase_canary/canary.log'
     :return:
     """
     res = canary_log_analyse(log_file)
-    table_avg_ping_dict = {x: mean([x[3] for x in res[x]]) for x in res}
+    table_avg_ping_dict = {x: mean([y[3] for y in res[x]]) for x in res}
     for table in res:
         avg_value = table_avg_ping_dict.get(table)
         region_info_list = res[table]
@@ -91,4 +99,5 @@ def deal_and_alarm(ratio=5.0, log_file='/data/hbase/log/hbase_canary/canary.log'
 
 
 if __name__ == '__main__':
-    deal_and_alarm(log_file=CANARY_LOG_PATH)
+    if run_hbase_canary('root', '192.168.1.101', log_file='/data/hbase/log/hbase_canary/canary.log'):
+        deal_and_alarm(log_file=CANARY_LOG_PATH)
