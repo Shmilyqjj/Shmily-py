@@ -11,7 +11,11 @@ HBase Canary监控报警  监控region get延迟  如果有部分region请求延
 """
 
 from numpy import mean
-import commands
+try:
+    import commands
+except:
+    # py3兼容  subprocess替代了py2的commands
+    import subprocess as commands
 import re
 import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -93,7 +97,8 @@ def deal_and_alarm(ratio=5.0, log_file='/data/hbase/log/hbase_canary/canary.log'
                 column_family = region_info[2]
                 content = "HBase表:%s\nStartRow:%s\ntimestamp.regionID:%s\nColumnFamily:%s\n请求延迟%s超过平均值%s的%s倍,请检查。" % \
                           (table, start_key, ts_region_id, column_family, ping, avg_value, ratio)
-                logger.warn(content)
+                logger.warning(content)
+                # alarm
             else:
                 logger.info("One region of table:%s request_ping:%s avg_ping:%s. NO ALARM!" % (table, ping, avg_value))
 
