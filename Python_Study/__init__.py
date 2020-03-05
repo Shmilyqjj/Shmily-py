@@ -10,7 +10,7 @@ example: pip install -i https://pypi.tuna.tsinghua.edu.cn/simple pymysql
 # encoding: utf-8
 """
 :Description:
-:Author: jiajing_qu
+:Author: 佳境Shmily
 :Create Time: ${DATE} ${TIME}
 :File: ${NAME}
 :Site: shmily-qjj.top
