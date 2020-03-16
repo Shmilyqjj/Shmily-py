@@ -26,6 +26,9 @@
 快排虽然快但是不稳定
 既稳定又快的是归并排序
 """
+import logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 
 def bubble_sort(input, desc=False):
@@ -138,22 +141,100 @@ def merge_sort_with_recursion(input, desc=False):
     :param desc: 默认False 默认不降序，默认升序
     :return: list
     """
-    operate = '>' if desc else '<'
+    operate = '>=' if desc else '<='
     input = deal_input(input)
+    def merge_sort(arr):
+        """
+        递归分治序列
+        :param arr:
+        :return:
+        """
+        if len(arr) <= 1:
+            return arr
+        num = len(arr) // 2   # /为浮点数除法   //为整数除法  5/2=2.5  5//2=2
+        left = merge_sort(arr[:num])
+        right = merge_sort(arr[num:])
+        return merge(left, right)  # 合并
 
-
+    def merge(left, right):
+        """
+        合并操作
+        :param left: 左子集合
+        :param right:右边子集合
+        :return:
+        """
+        l, r = 0, 0  # 初始化index
+        result = []
+        while l < len(left) and r < len(right):
+            if eval("left[l] %s right[r]" % operate):  # 筛选排序将left与right最小元素按序加入新序列
+                result.append(left[l])
+                l += 1
+            else:
+                result.append(right[r])
+                r += 1
+        result += left[l:]
+        result += right[r:]
+        return result
+    return merge_sort(input)
 
 
 def merge_sort_without_recursion(input, desc=False):
     """
     归并排序（非递归方式）
+    非递归  首先划分每个子数组元素的个数（也就是子数组的长度)->求出low，mid，high->对每个相邻的数组进行排序合并->
     1、时间复杂度：O(nlogn)  2、空间复杂度：O(n)  3、稳定排序  4、非原地排序
     :param input:deal_input支持的格式
     :param desc: 默认False 默认不降序，默认升序
     :return: list
+    :References:https://www.jianshu.com/p/3f27384387c1
     """
-    operate = '>' if desc else '<'
+    operate = '>=' if desc else '<='
     input = deal_input(input)
+
+    # 归并排序都是先确定low mid high，等确定了，就可以merge了
+    def merge(arr, low, mid, height):
+        """
+        合并操作
+        :param left: 左子集合
+        :param right:右边子集合
+        :return:
+        """
+        left = arr[low:mid]
+        right = arr[mid:height]
+        l, r = 0, 0  # 初始化index
+        result = []
+        while l < len(left) and r < len(right):
+            if eval("left[l] %s right[r]" % operate):  # 筛选排序将left与right最小元素按序加入新序列
+                result.append(left[l])
+                l += 1
+            else:
+                result.append(right[r])
+                r += 1
+        result += left[l:]
+        result += right[r:]
+        arr[low: height] = result
+        return result
+
+    # 获取low mid height的过程：
+    i = 1  # 首先设置子数组长度为1
+    result = []
+    while i < len(input):
+        logger.info("子数组长度：%s" % i)
+        # 求得要合并的两个相邻数组的区间 [low:mid) [mid:height)
+        # 求得通用公式：
+        # low = low + 2 x i
+        # mid = low + i
+        # height = low + 2 x i
+        low = 0  # 初始化low index
+        while low < len(input):
+            mid = low + i
+            height = low + 2 * i if low + 2 * i <= len(input) else len(input)  # 防止height下标越界
+            if mid < height: # 防止mid下标越界
+                logger.info("low:%s  mid:%s  height:%s" % (low, mid, height))
+                result = merge(input, low, mid, height)
+            low += i * 2
+        i = i * 2    # 子数组长度 每次递增两倍
+    return result
 
 
 def shell_sort(input, desc=False):
@@ -170,12 +251,20 @@ def shell_sort(input, desc=False):
 def quick_sort(input, desc=False):
     """
     快速排序
+    1.选择一个中轴元素
+    2.然后把数组中所有小于中轴元素的元素放在其左边，所有大于或等于中轴元素的元素放在其右边
+    此时中轴元素所处的位置的是有序的，无需再移动中轴元素的位置
+    3.从中轴元素那里开始把大的数组切割成两个小的数组(两个数组都不包含中轴元素)
+    4.接着通过递归的方式，让中轴元素左边的数组和右边的数组也重复同样的操作，直到数组的大小为1，此时每个元素都处于有序的位置
+
+    1、时间复杂度：O(nlogn)  2、空间复杂度：O(logn)  3、非稳定排序  4、原地排序
     :param input:deal_input支持的格式
     :param desc: 默认False 默认不降序，默认升序
     :return: list
     """
     operate = '>' if desc else '<'
     input = deal_input(input)
+
 
 
 def heap_sort(input, desc=False):
@@ -268,7 +357,7 @@ if __name__ == '__main__':
     # print(new_bubble_sort(input))
     # print(select_sort(input))
     # print(insert_sort(input))
-    print(merge_sort_with_recursion(input))
+    # print(merge_sort_with_recursion(input))
     print(merge_sort_without_recursion(input))
 
     # print(insert_into_specified_location(input,10,2.5))
