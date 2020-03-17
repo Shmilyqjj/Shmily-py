@@ -43,6 +43,9 @@ class Node(object):
 
 
 class LinkedList(object):
+    """
+    单向链表
+    """
     def __init__(self):
         # 初始化 为 空链表
         self._head = Node()
