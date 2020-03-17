@@ -49,7 +49,6 @@ class LinkedList(object):
     def __init__(self):
         # 初始化 为 空链表
         self._head = Node()
-        self._tail = None
         self._size = 0
 
     def get_size(self):
