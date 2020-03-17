@@ -79,7 +79,7 @@ class LinkedList(object):
         self._size += 1
 
     def search(self, value):
-    #search检索元素是否在链表中
+    # search检索元素是否在链表中
         current_node = self._head
         while current_node.has_next():
             if current_node.get_value() == value:
@@ -88,7 +88,7 @@ class LinkedList(object):
         return False
 
     def index(self, value):
-    #index索引元素在链表中的位置
+    # index索引元素在链表中的位置
         index = 0
         current_node = self._head
         while current_node.has_next():
@@ -118,9 +118,8 @@ class LinkedList(object):
                 current_node = current_node.get_next()
         return success
 
-
     def insert(self, index, value):
-    #insert链表中插入元素
+    # insert链表中插入元素
         if index == 0 or self._size == 0:
             self.add(value)
         elif index >= self._size:
@@ -139,6 +138,7 @@ class LinkedList(object):
         self._size += 1
 
     def show(self):
+        # 打印元素
         result_list = []
         current_node = self._head
         while current_node.has_next():
@@ -173,4 +173,8 @@ if __name__ == '__main__':
     print("empty?", ll.is_empty())
     print("size?", ll.get_size())
     ll.show()
+
+    print("search str 3", ll.search('3'))
+    print("search 3", ll.search(3))
+    print("search 103", ll.search('103'))
 
