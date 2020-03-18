@@ -33,7 +33,7 @@ class Node(object):
         return self._next
 
     def has_next(self):
-        return self._next is not None and self._next.get_value() is not None
+        return self._next is not None
 
     def set_value(self, value):
         self._value = value
@@ -48,24 +48,27 @@ class LinkedList(object):
     """
     def __init__(self):
         # 初始化 为 空链表
-        self._head = Node()
+        self._head = None
         self._size = 0
 
     def get_size(self):
         return self._size
 
     def is_empty(self):
-        return self._head is None or self._head.get_value() is None
+        return self._head is None
 
     def add(self, value):
     # add在链表前端添加元素:O(1)
         new_node = Node(value, None)
-        new_node.set_next(self._head)
-        self._head = new_node
+        if self.is_empty():
+            self._head = new_node
+        else:
+            new_node.set_next(self._head)
+            self._head = new_node
         self._size += 1
 
     def append(self, value):
-    #append在链表尾部添加元素:O(n)
+    # append在链表尾部添加元素:O(n)
         new_node = Node(value, None)
         if self.is_empty():
             # 如果为空 将添加的元素设置为第一个元素
@@ -111,6 +114,16 @@ class LinkedList(object):
                 current_node = current_node.get_next()
         return -1
 
+    def get(self, index):
+        current_node = self._head
+        if index >= self._size:
+            raise Exception('Linkedlist index out of range.')
+        for i in range(self._size):
+            if index == i:
+                return current_node.get_value()
+            else:
+                current_node = current_node.get_next()
+
     def remove(self, value):
     # remove删除链表中的某项元素
         success = False
@@ -149,20 +162,60 @@ class LinkedList(object):
             new_node.set_next(current_node)
         self._size += 1
 
+    def clear(self):
+        """
+        清空链表
+        :return:
+        """
+        # i = self._size
+        # while i:
+        #     i -= 1
+        #     need_delete_value = self.get(i)
+        #     self.remove(need_delete_value)
+        self._head = None
+        self._size = 0
+
+    def traversal(self, reverse=False):
+        """
+        遍历 链表
+        :param reverse: 默认正向  True为反向结果
+        :return: list
+        """
+        result = []
+        current_node = self._head
+        if self._size == 0:
+            return result
+        while current_node:
+            result.append(current_node.get_value())
+            current_node = current_node.get_next()
+        if reverse:
+            result = [result[i] for i in range(self._size-1, -1, -1)]
+        return result
+
+    def reverse(self):
+        """
+        反转单链表
+        :return:
+        """
+        tmp_list = self.traversal()
+        self.clear()
+        for i in tmp_list:
+            self.add(i)
+
     def show(self):
         # 打印元素
+        if self._size == 0:
+            return
         result_list = []
         current_node = self._head
         while current_node.has_next():
             node_value = current_node.get_value()
-            if not node_value:
-                print("---", current_node.get_value())
-                print("---", current_node.get_next().get_value())
             result_list.append(node_value)
             current_node = current_node.get_next()
         result_list.append(current_node.get_value())
         result_list = [str(x) for x in result_list]
         print('->'.join(result_list))
+
 
 if __name__ == '__main__':
     ll = LinkedList()
@@ -190,6 +243,22 @@ if __name__ == '__main__':
     print("search 3", ll.search(3))
     print("search 103", ll.search('103'))
     print(ll.replace(4, 100))
-    print(ll.replace(10, 10000))
+    # print(ll.replace(10, 10000))
+    print("-----------")
+
     ll.show()
+    ll.reverse()
+    ll.show()
+
+    print("-----------")
+    ll.show()
+    print(ll.get(2))
+    print(ll.traversal())
+    print(ll.traversal(True))
+    print("-----------")
+
+    ll.clear()
+    ll.show()
+    print(ll.get_size())
+
 
