@@ -78,6 +78,18 @@ class LinkedList(object):
             current_node.set_next(new_node)
         self._size += 1
 
+    def replace(self, index, value):
+        current_node = self._head
+        current_index = 0
+        while current_node:
+            if index == current_index:
+                current_node.set_value(value)
+                return True
+            else:
+                current_index += 1
+                current_node = current_node.get_next()
+        raise Exception("LinkedList index out of range.")
+
     def search(self, value):
     # search检索元素是否在链表中
         current_node = self._head
@@ -177,4 +189,7 @@ if __name__ == '__main__':
     print("search str 3", ll.search('3'))
     print("search 3", ll.search(3))
     print("search 103", ll.search('103'))
+    print(ll.replace(4, 100))
+    print(ll.replace(10, 10000))
+    ll.show()
 
