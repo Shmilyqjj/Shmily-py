@@ -104,15 +104,24 @@ class LinkedList(object):
 
     def index(self, value):
     # index索引元素在链表中的位置
+    # 如果该值对应链表中多个位置 输出list
+    # 如果不存在 输出-1
         index = 0
+        result_list = []
         current_node = self._head
         while current_node.has_next():
             if current_node.get_value() == value:
-                return index
+                # return index
+                result_list.append(index)
+            if index == self._size - 1:
+                break
             else:
                 index += 1
                 current_node = current_node.get_next()
-        return -1
+        if result_list:
+            return result_list
+        else:
+            return -1
 
     def get(self, index):
         current_node = self._head
@@ -125,11 +134,12 @@ class LinkedList(object):
                 current_node = current_node.get_next()
 
     def remove(self, value):
-    # remove删除链表中的某项元素
+    # remove删除链表中的某项元素(只删除1个)
         success = False
         current_node = self._head
+        current_index = 0
         pre_node = None
-        while current_node is not None:
+        while current_node.has_next():
             if current_node.get_value() == value:
                 if not pre_node:
                     self._head = current_node.get_next()
@@ -141,7 +151,11 @@ class LinkedList(object):
             else:
                 pre_node = current_node
                 current_node = current_node.get_next()
+            current_index += 1
         return success
+
+    def remove_multi(self, value):
+        pass
 
     def insert(self, index, value):
     # insert链表中插入元素
@@ -226,12 +240,17 @@ if __name__ == '__main__':
     ll.add(4)
 
     ll.append(5)
+    ll.append(5)
+
     ll.append(6)
+    ll.append(5)
+    ll.append(None)
 
     ll.insert(4, 4.444)
 
     print("remove 2", ll.remove(2))
     print("remove 7", ll.remove(7))
+    ll.show()
 
     print("index 5", ll.index(5))
     print("index 10", ll.index(10))
@@ -256,9 +275,23 @@ if __name__ == '__main__':
     print(ll.traversal())
     print(ll.traversal(True))
     print("-----------")
+    ll.show()
+    print("remove 5--", ll.remove(5))
+    print("index 5--", ll.index(5))
+    ll.show()
 
     ll.clear()
+
+    print("#######################")
+    ll.add(1)
+    ll.add(2)
+    ll.add(2)
+    ll.add(2)
+    ll.add(2)
+    ll.add(3)
     ll.show()
-    print(ll.get_size())
+    ll.remove(2)
+    ll.show()
+
 
 
