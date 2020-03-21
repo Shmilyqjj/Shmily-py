@@ -125,6 +125,24 @@ class Queue(object):
         print("队头 " + "->".join(result_list) + " 队尾")
 
 
+def queue():
+    """
+    基于Python的List实现队列
+    队列 先进先出 FIFO
+    队列在队头做删除操作,在队尾做插入操作
+    插入元素 0 1 2 3 4 5
+    :return:
+    """
+    queue = [1, 2, 3, 4, 5, 6]
+    print("queue:", queue)
+    queue.insert(0, 0)  # 入队enqueue  在index=0的位置插入0
+    queue.insert(0, -1)  # 在index=0的位置插入1
+    queue.insert(0, -2)
+    print("enqueue后的queue:", queue)
+    while queue:
+        o = queue.pop()
+        print("pop:", o)
+
 if __name__ == '__main__':
     q = Queue()
     q.enqueue(1)
@@ -145,3 +163,6 @@ if __name__ == '__main__':
     print(q.dequeue())
     q.show()
     print(q.count())
+
+    print("####################################################")
+    queue()
