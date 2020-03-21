@@ -6,6 +6,9 @@
 :Create Time: 2020/3/17 15:27
 :File: stack
 :Site: shmily-qjj.top
+
+栈的特点是后进先出（LIFO），队列的特点是先进先出（FIFO）
+
 stack和queue是不能通过查询具体某一个位置的元素而进行操作的。但是他们的排列是按顺序的
 对于stack我们可以使用python内置的list实现，因为list是属于线性数组，在末尾插入和删除一个元素所使用的时间都是O(1),这非常符合stack的要求。
 当然，我们也可以使用链表来实现。
@@ -13,6 +16,7 @@ stack和queue是不能通过查询具体某一个位置的元素而进行操作�
 线性表的两种存储：顺序存储和链式存储
 顺序存储结构：用一段地址连续的存储单元依次存储线性表的数据元素
 链式存储结构：地址可以连续也可以不连续的存储单元存储数据元素
+
 """
 
 
@@ -76,6 +80,7 @@ class LinkedListStack(object):
         self._stack_bottom = None  # 栈底
         self._size = 0
 
+# 的插入和删除操作只允许在表的一端进行
     def push(self, value):
         new_node = Node(value)
         if not self._stack_top:
