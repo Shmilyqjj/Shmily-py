@@ -13,9 +13,14 @@ import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
+# import sys
+#
+# sys.setrecursionlimit(9000000)
+
 
 def binary_search(sorted_list, item, asc=True):
     """
+    非递归的二分查找
     寻找一个数  如果存在，返回其索引值
     最基本的二分查找
 
@@ -45,8 +50,38 @@ def binary_search(sorted_list, item, asc=True):
     logger.info('二分法分了%s次，未找到元素。' % n)
     return -1
 
-m=[1,2,3,4,8,9,11,12,14,18,19,20,28]
-print(binary_search(m,14))
 
-m1 = [28, 20, 19, 18, 14, 12, 11, 9, 8, 4, 3, 2, 1]
-print(binary_search(m1,14,False))
+def recursion_binary_search(sorted_list, start, end, item):
+    """
+    递归二分查找  查找有序数组的一个元素
+    :param sorted_list: 有序数组  默认传升序数组
+    :param start: 初始下标
+    :param end: 结束下标
+    :param item: 待查找元素
+    :return: 如果找到，返回index  否则 -1
+    """
+    if start > end:  # 一定不能是大于等于 mid + 1等于end的时候很有可能mid+1就是找到的结果
+        return -1
+    mid = (end + start) // 2  # 不四舍五入  得到中间元素
+    if sorted_list[mid] == item:
+        return mid
+    elif item > sorted_list[mid]:
+        return recursion_binary_search(sorted_list, mid + 1, end, item)
+    elif item < sorted_list[mid]:
+        return recursion_binary_search(sorted_list, start, mid - 1, item)
+    return -1
+
+
+
+if __name__ == '__main__':
+    m=[1,2,3,4,8,9,11,12,14,18,19,20,28]
+    print(binary_search(m,14))
+    m1 = [28, 20, 19, 18, 14, 12, 11, 9, 8, 4, 3, 2, 1]
+    print(binary_search(m1,14,False))
+
+
+
+    # #########################################################
+    m=[1,2,3,4,8,9,11,12,14,18,19,20,28]
+    print(recursion_binary_search(m, 0, len(m) - 1, 14))
+
