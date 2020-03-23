@@ -38,7 +38,7 @@ def binary_search(sorted_list, item, asc=True):
     high = len(sorted_list)-1  # 最大数的下标
     n = 0  # 分的次数
     while low <= high:
-        mid = int((low + high)/2)  # 中间值 下标
+        mid = (low + high) >> 1 if (low + high) % 2 == 1 else ((low + high) >> 1) + 1 # 精确获取中间值 下标
         n += 1
         if sorted_list[mid]==item:
             logger.info('二分法分了%s次，找到元素' % n)
@@ -62,7 +62,8 @@ def recursion_binary_search(sorted_list, start, end, item):
     """
     if start > end:  # 一定不能是大于等于 mid + 1等于end的时候很有可能mid+1就是找到的结果
         return -1
-    mid = (end + start) // 2  # 不四舍五入  得到中间元素
+    # mid = (end + start) // 2  # 不四舍五入  得到中间元素
+    mid = (start + end) >> 1 if (start + end) % 2 == 1 else ((start + end) >> 1) + 1  # 精确获取中间值 下标
     if sorted_list[mid] == item:
         return mid
     elif item > sorted_list[mid]:
@@ -74,8 +75,8 @@ def recursion_binary_search(sorted_list, start, end, item):
 
 
 if __name__ == '__main__':
-    m=[1,2,3,4,8,9,11,12,14,18,19,20,28]
-    print(binary_search(m,14))
+    m=[1,2,3,4,8,9,11,12,14,18,19,20,28,29]
+    print(binary_search(m,20))
     m1 = [28, 20, 19, 18, 14, 12, 11, 9, 8, 4, 3, 2, 1]
     print(binary_search(m1,14,False))
 
