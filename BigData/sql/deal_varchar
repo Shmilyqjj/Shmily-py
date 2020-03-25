@@ -20,6 +20,11 @@ select ROUND(1.495,2)
 select ROUND(1.494,2)
 select ROUND(1.494,1)
 
+# 上进
+SELECT CEILING(13.15)
+
+# 下舍
+SELECT FLOOR(54.99)
 
 # FORMAT函数将数字N格式化为格式，如"#,###,###.##"，四舍五入到D位小数。它返回一个值作为字符串。
 select FORMAT(2020.0325,3)
