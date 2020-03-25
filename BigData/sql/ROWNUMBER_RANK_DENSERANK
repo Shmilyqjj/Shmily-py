@@ -1,0 +1,63 @@
+ROW_NUMBER()  RANK()  DENSE_RANK()
+这三个函数的区别主要在分数一致的情况下
+row_number()不重复排序
+rank()重复且跳跃数字排序 eg: 1 2 3 3 3 6 7 8 9  跳跃排名最终总数不变
+dense_rank()重复且不跳跃数字排序。  eg:1 2 3 3 3 4 5 6  不跳跃 总数改变
+
+测试数据：
+0.csv
+id,name,class,score
+1,张飞,1,100
+2,刘备,1,99
+3,李逵,1,95
+4,小动,1,97
+5,小智,1,80
+6,吕布,2,67
+7,赵云,2,90
+8,典韦,2,89
+9,关羽,2,70
+10,马超,2,98
+11,张媛,1,100
+12,元歌,2,100
+12,后裔,3,90
+12,大乔,3,90
+12,小乔,3,90
+
+
+use pyspark-sql 2.4
+
+df = spark.read.csv('D:/spark/0.csv', header=True, encoding='utf8',inferSchema=True)
+df.registerTempTable('tb')
+spark.sql("""
+select *,dense_rank() over(order by score desc) from tb
+""").show(1000,False)
+
+
+# 得到按成绩从高到底降序排序并且 加排名r  分数一样的名词不一样
+select id,name,class,score,row_number() over(order by score desc) r from tb
+
+# 每个班级内排名
+select id,name,class,score,row_number() over(partition by class order by score desc) r from tb
+
+# 每个班级内排名前三
+select * from(
+select id,name,class,score,row_number() over(partition by class order by score desc) r from tb
+) t where t.r <= 3
+
+# 注意select语句中的别名 不能用作where和having的条件
+
+
+跳跃排名：
+select *,rank() over(order by score desc) from tb
+
+不跳跃排名
+select *,dense_rank() over(order by score desc) from tb
+
+
+
+题：
+--列出每个班分数排名前三的学生
+    select * from (select id, name, class, score ,
+                row_number() over (partition by class order by score desc) as r1,
+                rank() over (partition by class order by score desc) as r2 ,
+                dense_rank() over (partition by class order by score desc) as r3 from te.sc) B where r1<=3 ;
