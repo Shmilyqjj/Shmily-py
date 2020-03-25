@@ -1,8 +1,9 @@
-ROW_NUMBER()  RANK()  DENSE_RANK()
+ROW_NUMBER()  RANK()  DENSE_RANK()  NTILE()
 这三个函数的区别主要在分数一致的情况下
-row_number()不重复排序
-rank()重复且跳跃数字排序 eg: 1 2 3 3 3 6 7 8 9  跳跃排名最终总数不变
-dense_rank()重复且不跳跃数字排序。  eg:1 2 3 3 3 4 5 6  不跳跃 总数改变
+row_number()不重复排名
+rank()重复且跳跃数字排名 eg: 1 2 3 3 3 6 7 8 9  跳跃排名最终总数不变
+dense_rank()重复且不跳跃数字排名。  eg:1 2 3 3 3 4 5 6  不跳跃 总数改变
+NTILE() 将有序分区中的行分发到指定数目的组中，各个组有编号，编号从1开始，就像我们说的’分区’一样 ，分为几个区，NTILE的值为分区号.(它把有序的数据集合平均分配到指定的数量（num）个桶中, 将桶号分配给每一行。如果不能平均分配，则优先分配较小编号的桶，并且各个桶中能放的行数最多相差1。)
 
 测试数据：
 0.csv
@@ -29,7 +30,7 @@ use pyspark-sql 2.4
 df = spark.read.csv('D:/spark/0.csv', header=True, encoding='utf8',inferSchema=True)
 df.registerTempTable('tb')
 spark.sql("""
-select *,dense_rank() over(order by score desc) from tb
+select *,NTILE(3) over(order by score desc) area_number from tb
 """).show(1000,False)
 
 
@@ -53,6 +54,8 @@ select *,rank() over(order by score desc) from tb
 不跳跃排名
 select *,dense_rank() over(order by score desc) from tb
 
+# NTILE()分区
+select *,NTILE(3) over(order by score desc) area_number from tb  # 将所有数据分三个区
 
 
 题：
@@ -61,3 +64,7 @@ select *,dense_rank() over(order by score desc) from tb
                 row_number() over (partition by class order by score desc) as r1,
                 rank() over (partition by class order by score desc) as r2 ,
                 dense_rank() over (partition by class order by score desc) as r3 from te.sc) B where r1<=3 ;
+
+Tips：
+使用rank over()的时候，空值是最大的，如果排序字段为null, 可能造成null字段排在最前面，影响排序结果。
+可以这样： rank over(partition by course order by score desc nulls last)
