@@ -611,6 +611,7 @@ from student s,course c,score,
 (select s_id,avg(s_score) as avg,sum(s_score) as sum from score group by s_id) avg_table
 where s.s_id = score.s_id and c.c_id = score.c_id and s.s_id = avg_table.s_id
 或：
+行转列 写法：
 select a.s_id,a.s_name,
 SUM(case c.c_name when '计网' then b.s_score else 0 end) as '计网',
 SUM(case c.c_name when '计组' then b.s_score else 0 end) as '计组',
