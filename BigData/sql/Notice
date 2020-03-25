@@ -1,0 +1,6 @@
+SQL的执行顺序
+FROM -> WHERE -> GROUP BY -> HAVING -> SELECT -> DISTINCT -> UNION -> ORDER BY
+
+根据SQL执行顺序，不能在having condition中使用select list中的alias。
+但Mysql5.7后默认做了优化，可以在having后使用where的别名
+spark不可以在having使用alias
