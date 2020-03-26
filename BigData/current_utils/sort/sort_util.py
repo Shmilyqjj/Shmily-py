@@ -251,7 +251,7 @@ def shell_sort(input, desc=False):
 def quick_sort(input, desc=False):
     """
     快速排序
-    1.选择一个中轴元素
+    1.选择一个中轴元素(通常会选择最左/最右边的元素)
     2.然后把数组中所有小于中轴元素的元素放在其左边，所有大于或等于中轴元素的元素放在其右边
     此时中轴元素所处的位置的是有序的，无需再移动中轴元素的位置
     3.从中轴元素那里开始把大的数组切割成两个小的数组(两个数组都不包含中轴元素)
@@ -264,6 +264,7 @@ def quick_sort(input, desc=False):
     """
     operate = '>' if desc else '<'
     input = deal_input(input)
+
 
 
 
@@ -321,6 +322,18 @@ def builtin_sort(input, desc=False):
     input = deal_input(input)
     return sorted(input,reverse=desc)
 
+def sort_dict(input_dict, by='value', desc=False, key=None):
+    """
+    使用python自带sorted函数对dict按照key或value排序
+    :param input_dict: 输入dict
+    :param by: 根据什么排序 默认根据value  可以指定为'key'
+    :param desc:降序 默认不降序
+    :param key: 自定义排序function
+    :return: dict
+    """
+    key_func = lambda x: x[1] if by == 'value' else lambda x: x[0]
+    key_func = key_func if not key else key
+    return {x[0]: x[1] for x in sorted(input_dict.items(), key=key_func, reverse=desc)}
 
 def deal_input(input, dict_flag='key'):
     """
@@ -358,7 +371,8 @@ if __name__ == '__main__':
     # print(select_sort(input))
     # print(insert_sort(input))
     # print(merge_sort_with_recursion(input))
-    print(merge_sort_without_recursion(input))
+    # print(merge_sort_without_recursion(input))
+    print(quick_sort(input))
 
     # print(insert_into_specified_location(input,10,2.5))
 
