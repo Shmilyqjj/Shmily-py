@@ -1,9 +1,11 @@
 SQL的执行顺序
 FROM -> WHERE -> GROUP BY -> HAVING -> SELECT -> DISTINCT -> UNION -> ORDER BY
 
+
 根据SQL执行顺序，不能在having condition中使用select list中的alias。
 但Mysql5.7后默认做了优化，可以在having后使用where的别名
 spark不可以在having使用alias
+
 
 根据SQL执行顺序，ORDER BY是最后执行 所以ORDER BY内可以有别名
 
@@ -11,3 +13,6 @@ spark不可以在having使用alias
 Parttion by关键字用于给结果集进行分区。
 它和聚合函数Group by不同的地方在于它只是将原始数据进行名次排列，能够返回一个分组中的多条记录（记录数不变）
 而Group by是对原始数据进行聚合统计，一般只有一条反映统计值的结果（每组返回一条）。
+
+
+between and是包含左右值的，not between and是它的取反，不包含左右值
