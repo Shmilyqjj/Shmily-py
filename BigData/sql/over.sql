@@ -1,4 +1,9 @@
 SQL的OVER()函数 简直是神器
+它和聚合函数的不同之处是：对于每个组返回多行
+over(开窗范围)
+例子
+over（order by salary range between 5 preceding and 5 following）：窗口范围为当前行数据幅度减5加5后的范围内的。
+over（order by salary rows between 5 preceding and 5 following）：窗口范围为当前行前后各移动5行。
 
 over不能单独使用
 要和分析函数：
