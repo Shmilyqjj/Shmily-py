@@ -16,3 +16,58 @@ Parttion by关键字用于给结果集进行分区。
 
 
 between and是包含左右值的，not between and是它的取反，不包含左右值
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Hive：
+order by
+order by 会对数据进行全局排序,和oracle和mysql等数据库中的order by 效果一样，它只在一个reduce中进行所以数据量特别大的时候效率非常低。
+
+distribute by
+DISTRIBUTE BY 是控制在map端如何拆分数据给reduce端的。hive会根据distribute by后面列，对应reduce的个数进行分发，默认是采用hash算法。
+
+sort by
+sort by为每个reduce产生一个排序文件。在有些情况下，你需要控制某个特定行应该到哪个reducer，这通常是为了进行后续的聚集操作。distribute by刚好可以做这件事。因此，distribute by经常和sort by配合使用。
+
+group by
+和distribute by类似 都是按key值划分数据 都使用reduce操作
+唯一不同的是，distribute by只是单纯的分散数据，distribute by col – 按照col列把数据分散到不同的reduce。
+而group by把相同key的数据聚集到一起，后续必须是聚合操作
+
+cluster by
+distribute by 和 sort by 合用就相当于cluster by，但是cluster by 不能指定排序为asc或 desc 的规则，只能是升序排列。
+
+Partition by
+通常查询时会对整个数据库查询，而这带来了大量的开销，因此引入了partition的概念，在建表的时候通过设置partition的字段, 会根据该字段对数据分区存放，更具体的说是存放在不同的文件夹,这样通过指定设置Partition的字段条件查询时可以减少大量的开销
+具体参考 https://www.cnblogs.com/csguo/p/7885252.html
