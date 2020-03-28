@@ -722,4 +722,55 @@ select w1.memberid,w1.followerid from weibo w1 join weibo w2 on w1.memberid=w2.f
 select t1.memberid,t1.followerid from weibo t1,weibo t2 where t1.memberid=t2.followerid and t1.followerid = t2.memberid;
 
 -- *********************************************************************************************************************
---7.
+--7.[Hive] sum() over()  distribute by和sort by
+--现有这么一批数据，现要求出：每个用户截止到每月为止的最大单月访问次数和累计到该月的总访问次数
+--三个字段的意思：
+--用户名，月份，访问次数
+csv_file:
+user_name,month,times
+A,2020-01,5
+A,2020-01,15
+B,2020-01,5
+A,2020-01,8
+B,2020-01,25
+A,2020-01,5
+A,2020-02,4
+A,2020-02,6
+B,2020-02,10
+B,2020-02,5
+A,2020-03,16
+A,2020-03,22
+B,2020-03,23
+B,2020-03,10
+B,2020-03,11
+--
+df = spark.read.csv('D:/spark/00.csv', header=True, encoding='utf8',inferSchema=True)
+df.registerTempTable('hive_table')
+spark.sql("""
+
+""").show(1000,False)
+--最后结果展示:
+--用户	月份		最大访问次数	总访问次数		当月访问次数
+--A	2020-01		        33		  33		        33
+--A	2020-02		        33		  43		        10
+--A	2020-03		        38		  81		        38
+--B	2020-01		        30		  30		        30
+--B	2020-02		        30		  45                15
+--B	2020-03		        44		  89		        44
+
+-- 答案：
+select
+user_name,
+month,
+times,
+max(times) over(distribute by user_name sort by month) maxtimes,
+sum(times) over(distribute by user_name sort by month) sumtimes
+from
+(select
+user_name,
+month,
+sum(times) times
+from hive_table
+group by user_name,month) tmp
+
+
