@@ -428,7 +428,8 @@ select s.s_id,s.s_name,
 from student s
 group by s.s_id order by 平均分 desc;
 
---另一种写法： （order by n）n表示第几个字段
+--另一种写法： （order by n）n表示第几个字段 [行转列]
+-- 行转列是指本来多行显示的数据变为一行显示 一般用 max(case when then else end) group by来实现
 SELECT a.s_id,
 MAX(CASE a.c_id WHEN '01' THEN a.s_score END ) 计网,
 MAX(CASE a.c_id WHEN '02' THEN a.s_score END ) 计组,
@@ -773,4 +774,156 @@ sum(times) times
 from hive_table
 group by user_name,month) tmp
 
+--8.[hive] 求：所有A课程成绩 大于 B课程成绩的学生的学号
+csv_file:
+id,stu_id,course,score
+1,1,'A',43
+2,1,'B',55
+3,2,'A',77
+4,2,'B',88
+5,3,'A',98
+6,3,'B',65
 
+df = spark.read.csv('D:/spark/01.csv', header=True, encoding='utf8',inferSchema=True)
+df.registerTempTable('hive_table')
+spark.sql("""
+
+""").show(10000,False)
+
+
+--答案：
+-- 普通做法
+select a.stu_id from
+(select stu_id,score from hive_table where course="'A'") a,
+(select stu_id,score from hive_table where course="'B'") b
+where a.stu_id=b.stu_id and a.score > b.score
+
+-- 行转列
+select stu_id from
+(select stu_id,
+sum(case course when "'A'" then score else 0 end) as A,
+sum(case course when "'B'" then score else 0 end) as B,
+from hive_table
+group by stu_id
+) tmp where tmp.A > tmp.B
+
+-- 9.2010012325表示在2010年01月23日的气温为25度。现在要求使用hive，计算每一年出现过的最大气温的日期+温度
+csv_File:
+2014010114
+2014010216
+2014010317
+2014010410
+2014010506
+2012010609
+2012010732
+2012010812
+2012010919
+2012011023
+2001010116
+2001010212
+2001010310
+2001010411
+2001010529
+2013010619
+2013010722
+2013010812
+2013010929
+2013011023
+2008010105
+2008010216
+2008010337
+2008010414
+2008010516
+2007010619
+2007010712
+2007010812
+2007010999
+2007011023
+2010010114
+2010010216
+2010010317
+2010010410
+2010010506
+2015010649
+2015010722
+2015010812
+2015010999
+2015011023
+
+from pyspark.sql.types import StructType, StructField, StringType
+df = spark.read.csv('D:/spark/000.csv', header=False, encoding='utf8',schema=StructType([StructField('info', StringType(), True)]))
+df.registerTempTable('hive_table')
+# 注意HQL里没有mid  用substr切分字符串  substr(col,start,n几个字符)
+# 注意 时间转换 使用concat+substr或 from_unixtime(unix_timestamp(FIRST(a.d),'yyyymmdd'),'yyyy-mm-dd')
+# 注意聚合函数 未聚合的字段想查找到，需要加FIRST()
+spark.sql("""
+
+""").show(1000,False)
+-- 答案1：
+select FIRST(a.d) as day,MAX(a.t) max_t from
+(select CONCAT(substr(info,1,4),'-',substr(info,5,2),'-',substr(info,7,2)) as d,
+substr(info,9,2) as t,
+substr(info,1,4) as y
+from hive_table
+) a group by a.y
+
+--答案2：
+select from_unixtime(unix_timestamp(FIRST(a.d),'yyyymmdd'),'yyyy-mm-dd') as day,MAX(a.t) AS max_t from
+(select substr(info,1,8) as d,
+substr(info,9,2) as t,
+substr(info,1,4) as y
+from hive_table) a
+group by a.y;
+
+-- 10.现有一份以下格式的数据,表示有id为1,2,3的学生选修了课程a,b,c,d,e,f中其中几门：
+csv_file:
+id course
+1,a
+1,b
+1,c
+1,e
+2,a
+2,c
+2,d
+2,f
+3,a
+3,b
+3,c
+3,e
+
+df = spark.read.csv('D:/spark/0000.csv', header=True, encoding='utf8',inferSchema=True)
+df.registerTempTable('hive_table')
+spark.sql("""
+select id,course from hive_table distribute by id
+""").show(10000,False)
+
+-- 1.编写Hive的HQL语句来实现以下结果：(表中的1表示选修，表中的0表示未选修)
+1       1       1       1       0       1       0
+2       1       0       1       1       0       1
+3       1       1       1       0       1       0
+
+-- 答案1
+select id,
+case when course='a' then 1 else 0 end as a,
+case when course='b' then 1 else 0 end as b,
+case when course='c' then 1 else 0 end as c,
+case when course='d' then 1 else 0 end as d,
+case when course='e' then 1 else 0 end as e
+from hive_table;
+
+--答案2：
+select id,
+IF(course='a',1,0) as a,
+IF(course='b',1,0) as b,
+IF(course='c',1,0) as c,
+IF(course='d',1,0) as d,
+IF(course='e',1,0) as e,
+IF(course='f',1,0) as f
+from hive_table;
+
+-- 2.列转行，得出每个人修的所有课，字段名为courses，课名之间用“,”隔开
+
+select id,concat_ws(',',collect_list(course)) from hive_table group by id;
+select id,course from hive4 partition by id
+
+-- 3.如果以上面题2结果为hive_table1，求出行转列结果
