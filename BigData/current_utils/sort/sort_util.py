@@ -6,6 +6,7 @@
 :Create Time: 2020/3/14 21:04
 :File: sort_util
 :Site: shmily-qjj.top
+:口诀：1.不稳定：快选希堆，其他则是稳定算法。
 :Tips:
 1、稳定排序：如果 a 原本在 b 的前面，且 a == b，排序之后 a 仍然在 b 的前面，则为稳定排序。
 2、非稳定排序：如果 a 原本在 b 的前面，且 a == b，排序之后 a 可能不在 b 的前面，则为非稳定排序。
@@ -251,19 +252,25 @@ def shell_sort(input, desc=False):
 def quick_sort(input, desc=False):
     """
     快速排序
+    基于分治思想
+
     1.选择一个中轴元素(通常会选择最左/最右边的元素)
     2.然后把数组中所有小于中轴元素的元素放在其左边，所有大于或等于中轴元素的元素放在其右边
     此时中轴元素所处的位置的是有序的，无需再移动中轴元素的位置
     3.从中轴元素那里开始把大的数组切割成两个小的数组(两个数组都不包含中轴元素)
     4.接着通过递归的方式，让中轴元素左边的数组和右边的数组也重复同样的操作，直到数组的大小为1，此时每个元素都处于有序的位置
 
-    1、时间复杂度：O(nlogn)  2、空间复杂度：O(logn)  3、非稳定排序  4、原地排序
+    1、平均时间复杂度：O(nlogn)  最坏：O(N*N)  2、空间复杂度：O(logn)  3、非稳定排序  4、原地排序
     :param input:deal_input支持的格式
     :param desc: 默认False 默认不降序，默认升序
     :return: list
     """
     operate = '>' if desc else '<'
     input = deal_input(input)
+
+    def get_mid(arr, low_index, high_index):
+        pass
+
 
 
 
