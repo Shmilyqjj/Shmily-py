@@ -2,6 +2,8 @@
 -- 但 count(field) 则会在查询字段时忽略字段值为null的项。
 -- 统计表长时，用count(*) 就可以了，但要统计字段时，需要注意这个问题。
 
+-- 但可能count(1)是count一个固定值，count * 是 把 * 翻译成字段，所以可能count（1）性能略微高些：https://blog.csdn.net/qq_34696236/article/details/84376507
+
 select count(1) from course;
 select count(0) from course;
 select count(*) from course;
