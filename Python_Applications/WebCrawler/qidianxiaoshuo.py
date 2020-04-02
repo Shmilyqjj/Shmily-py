@@ -25,7 +25,7 @@ def main(url):
     #起点网小说第一章的链接
     html = get_page(url)
     result = get_data(html)
-    with open("三体全集.txt","a") as f:
+    with open("三体全集.txt", "a") as f:
         f.write(result[0][0])
         f.write(filter_Data(result[0][1]))
     #递归调用，获得后面的章节
