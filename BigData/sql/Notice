@@ -17,7 +17,7 @@ Parttion by关键字用于给结果集进行分区。
 
 between and是包含左右值的，not between and是它的取反，不包含左右值
 
-
+truncate和不带where的delete都有清空表数据保留表结构的作用，但truncate效率较高、  delete可以支持回滚。
 
 
 
