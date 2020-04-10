@@ -331,15 +331,25 @@ def builtin_sort(input, desc=False):
 
 def sort_dict(input_dict, by='value', desc=False, key=None):
     """
-    使用python自带sorted函数对dict按照key或value排序
+    使用python自带sorted函数对dict按照key或value或字典序排序  sorted支持字典序
     :param input_dict: 输入dict
-    :param by: 根据什么排序 默认根据value  可以指定为'key'
+    :param by: 根据什么排序 默认根据value  可以指定为'key'，'dictionary'
     :param desc:降序 默认不降序
     :param key: 自定义排序function
     :return: dict
     """
-    key_func = lambda x: x[1] if by == 'value' else lambda x: x[0]
-    key_func = key_func if not key else key
+    key_func = None
+    if by == 'value':
+        key_func = lambda x: x[1]
+    elif by == 'key':
+        key_func = lambda x: x[0]
+    elif by == 'dictionary':
+        # 字典序
+        key_func = str
+    elif key:
+        key_func =  key
+    else:
+        pass
     return {x[0]: x[1] for x in sorted(input_dict.items(), key=key_func, reverse=desc)}
 
 def deal_input(input, dict_flag='key'):
