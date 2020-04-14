@@ -875,7 +875,29 @@ substr(info,1,4) as y
 from hive_table) a
 group by a.y;
 
--- 10.现有一份以下格式的数据,表示有id为1,2,3的学生选修了课程a,b,c,d,e,f中其中几门：
+-- 10.查每个用户最近一笔交易记录的金额
+CREATE TABLE `TRecent` (
+  `name` varchar(20) default NULL,
+  `money` float(9,2) default NULL,
+  `add_date` datetime default NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+insert into TRecent VALUES('a',100.3,'2008-01-24 22:16:31');
+insert into TRecent VALUES('a',103.5,'2008-04-04 10:06:15');
+insert into TRecent VALUES('b',1000,'2004-06-02 01:06:24');
+insert into TRecent VALUES('b',200.7,'2008-11-04 09:16:39');
+insert into TRecent VALUES('c',8000,'2006-04-25 08:00:32');
+
+-- 答案：
+select a.name,a.money from student.trecent a,
+(select name,max(add_date) as d from student.trecent group by name) b
+where a.name=b.name and a.add_date=b.d;
+
+select a.name,a.money from student.trecent a inner join
+(select name,max(add_date) as d from student.trecent group by name) b
+on a.name=b.name and a.add_date=b.d;
+
+-- 11.现有一份以下格式的数据,表示有id为1,2,3的学生选修了课程a,b,c,d,e,f中其中几门：
 csv_file:
 id course
 1,a
@@ -910,6 +932,7 @@ case when course='c' then 1 else 0 end as c,
 case when course='d' then 1 else 0 end as d,
 case when course='e' then 1 else 0 end as e
 from hive_table;
+
 
 --答案2：
 select id,
