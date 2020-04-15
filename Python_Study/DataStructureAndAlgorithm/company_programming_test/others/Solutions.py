@@ -101,34 +101,99 @@
 #         print(length)
 
 
+# def solution():
+#     """
+#     给定一系列数字要求数字重量从小到大排序
+#     重量：每一位上的数字求和即为重量 19的重量1+9=10
+#     按数字重量从小到大排序，重量相等时按字典序  字典序 使用python的sorted可以实现sorted(l,key=str)
+#     :return:
+#     """
+#     input = ["71899703","425","81","91","9","18","7","7","6","72","27","7516","7615","821","812"]
+#     input = ["71899703","18","9","81","7","7","7516","7615","821","812"]
+#     # input = ["81","9","18","27","72"]
+#     tmp_dict = {}
+#     for i in range(len(input)):
+#         weight = 0
+#         single_value = input[i]
+#         for idx in range(len(single_value)):
+#             s = single_value[idx]
+#             weight += int(s)
+#         tmp_dict.setdefault(weight, []).append(single_value)
+#     tmp_dict = {x[0]:x[1] for x in sorted(tmp_dict.items(), key=lambda x: x[0])}
+#     print(tmp_dict)
+#     result_list = []
+#     for t in tmp_dict:
+#         l = tmp_dict[t]
+#         if len(l) == 1:
+#             result_list.append(l[0])
+#         else:
+#             result_list.extend(sorted(l,key=str))
+#     return result_list
+
+# def solution():
+#     """
+#     公司团建，要去漂流，第i个人体重为weight[i]，船可以承载最大重量为limit，每艘船最多承载俩人，重量不能超limit，问最少需要多少船
+#     第一行输入参与漂流的人员体重数组：80 90
+#     第二行输入limit值：100
+#     结果：2
+#     :return:
+#     """
+#     in1 = input()
+#     weight = sorted([int(x) for x in in1.split(" ")] if in1 else [])
+#     limit = int(input())
+#     count = 0
+#     for i in range(len(weight)):
+#         if i >= len(weight):
+#             break
+#         if weight[i] > float(limit)/2:
+#             return len(weight)
+#         else:
+#             if i+1 <= len(weight)-1 and limit - weight[i] >= weight[i+1]:
+#                 weight.pop(i)
+#                 count += 1
+#             else:
+#                 count += 1
+#     return count
+
+
 def solution():
     """
-    给定一系列数字要求数字重量从小到大排序
-    重量：每一位上的数字求和即为重量 19的重量1+9=10
-    按数字重量从小到大排序，重量相等时按字典序  字典序 使用python的sorted可以实现sorted(l,key=str)
+    给出n个盒子长度和宽度，不考虑高度，想把它们套在一起
+    如果盒子A长度和宽度都小于B，则A可以套进盒子B(等于不行)
+    求盒子做多多少层
+    输入第一行一个整数n代表盒子个数
+    接下来n行输入每个盒子长宽
+    in:
+    9
+    3 4
+    2 3
+    4 5
+    1 3
+    2 2
+    3 6
+    1 2
+    3 2
+    2 4
+    out:
+    4
     :return:
     """
-    input = ["71899703","425","81","91","9","18","7","7","6","72","27","7516","7615","821","812"]
-    input = ["71899703","18","9","81","7","7","7516","7615","821","812"]
-    # input = ["81","9","18","27","72"]
-    tmp_dict = {}
-    for i in range(len(input)):
-        weight = 0
-        single_value = input[i]
-        for idx in range(len(single_value)):
-            s = single_value[idx]
-            weight += int(s)
-        tmp_dict.setdefault(weight, []).append(single_value)
-    tmp_dict = {x[0]:x[1] for x in sorted(tmp_dict.items(), key=lambda x: x[0])}
-    print(tmp_dict)
-    result_list = []
-    for t in tmp_dict:
-        l = tmp_dict[t]
-        if len(l) == 1:
-            result_list.append(l[0])
-        else:
-            result_list.extend(sorted(l,key=str))
-    return result_list
+    boxes = []
+    for i in range(0, int(input())):
+        boxes.append(input().split(" "))
+    boxes = sorted(boxes, key=lambda x: x[0])
+    count = 0
+    tmp = 0
+    for i in range(len(boxes)):
+        if i+1 >= len(boxes):
+            if int(boxes[i-1][1]) < int(boxes[i][1]):
+                count += 1
+            break
+        if int(boxes[i][1]) < int(boxes[i + 1][1]) and tmp != int(boxes[i][0]):
+            count += 1
+            tmp = int(boxes[i][0])
+    return count
+
 
 if __name__ == '__main__':
     print(solution())
