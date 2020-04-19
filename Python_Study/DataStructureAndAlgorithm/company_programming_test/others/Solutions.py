@@ -156,43 +156,47 @@
 #     return count
 
 
+# def solution():
+#     """
+#     给出n个盒子长度和宽度，不考虑高度，想把它们套在一起
+#     如果盒子A长度和宽度都小于B，则A可以套进盒子B(等于不行)
+#     求盒子最多多少层
+#     输入第一行一个整数n代表盒子个数
+#     接下来n行输入每个盒子长宽
+#     in:
+#     9
+#     3 4
+#     2 3
+#     4 5
+#     1 3
+#     2 2
+#     3 6
+#     1 2
+#     3 2
+#     2 4
+#     out:
+#     4
+#     :return:
+#     """
+#     boxes = []
+#     for i in range(0, int(input())):
+#         boxes.append(input().split(" "))
+#     boxes = sorted(boxes, key=lambda x: x[0])
+#     count = 0
+#     tmp = 0
+#     for i in range(len(boxes)):
+#         if i+1 >= len(boxes):
+#             if int(boxes[i-1][1]) < int(boxes[i][1]):
+#                 count += 1
+#             break
+#         if int(boxes[i][1]) < int(boxes[i + 1][1]) and tmp != int(boxes[i][0]):
+#             count += 1
+#             tmp = int(boxes[i][0])
+#     return count
+
+
 def solution():
-    """
-    给出n个盒子长度和宽度，不考虑高度，想把它们套在一起
-    如果盒子A长度和宽度都小于B，则A可以套进盒子B(等于不行)
-    求盒子做多多少层
-    输入第一行一个整数n代表盒子个数
-    接下来n行输入每个盒子长宽
-    in:
-    9
-    3 4
-    2 3
-    4 5
-    1 3
-    2 2
-    3 6
-    1 2
-    3 2
-    2 4
-    out:
-    4
-    :return:
-    """
-    boxes = []
-    for i in range(0, int(input())):
-        boxes.append(input().split(" "))
-    boxes = sorted(boxes, key=lambda x: x[0])
-    count = 0
-    tmp = 0
-    for i in range(len(boxes)):
-        if i+1 >= len(boxes):
-            if int(boxes[i-1][1]) < int(boxes[i][1]):
-                count += 1
-            break
-        if int(boxes[i][1]) < int(boxes[i + 1][1]) and tmp != int(boxes[i][0]):
-            count += 1
-            tmp = int(boxes[i][0])
-    return count
+    pass
 
 
 if __name__ == '__main__':
