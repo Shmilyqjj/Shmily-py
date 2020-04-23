@@ -64,6 +64,8 @@
 递归实现
 非递归实现
 """
+import turtle
+
 
 class Node(object):
     def __init__(self, value=None, left=None, right=None):
@@ -208,23 +210,58 @@ class BinaryTree:
             if current_node.right:
                 queue.insert(0, current_node.right)
 
-
-
+    def draw_tree(self, node=None) -> None:
+        """
+        This function can use turtle to draw a binary tree
+        """
+        def height(head):
+            return 1 + max(height(head.left), height(head.right)) if head else -1
+        def jump_to(x, y):
+            t.penup()
+            t.goto(x, y)
+            t.pendown()
+        def draw(node, x, y, dx):
+            if node:
+                t.goto(x, y)
+                jump_to(x, y - 20)
+                t.write(node.value, align="center")
+                draw(node.left, x - dx, y - 60, dx / 2)
+                jump_to(x, y - 20)
+                draw(node.right, x + dx, y - 60, dx / 2)
+        node = node if node else self.root
+        t = turtle.Turtle()
+        t.speed(0)
+        turtle.delay(0)
+        h = height(node)
+        jump_to(0, 30 * h)
+        draw(node, 0, 30 * h, 10 * h)
+        t.hideturtle()
+        turtle.mainloop()
 
 
 if __name__ == '__main__':
     bt = BinaryTree()
-    bt.add(1)
+    # bt.add(1)
+    # bt.add(2)
+    # bt.add(5)
+    # bt.add(7)
+    # bt.add(3)
+    # bt.add(8)
+    # bt.add(10)
+    # bt.add(4)
+    # bt.add(6)
+    # bt.add(9)
+
+    bt.add(3)
     bt.add(2)
+    bt.add(4)
+    bt.add(1)
+    bt.add(6)
     bt.add(5)
     bt.add(7)
-    bt.add(3)
     bt.add(8)
-    bt.add(10)
-    bt.add(4)
-    bt.add(6)
-    bt.add(9)
-
+    bt.add(8)
+    bt.draw_tree()
     # bt.pre_traverse(bt.root)
     # bt.pre_traverse_without_recursion(bt.root)
     # bt.mid_traverse(bt.root)
