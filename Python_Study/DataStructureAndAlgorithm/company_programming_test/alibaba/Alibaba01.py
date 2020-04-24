@@ -17,27 +17,4 @@
  * 输出范例:
  * 602.0
 """
-m = int(input())
-n = input()
-money = n.split(' ')
-length = len(money)
-for i in range(length):
-    money[i] = int(money[i])
-money = sorted(money)
-total_money = 0
-for i in range(length):
-    total_money = total_money + money[i]
-if total_money < m*2:
-    print(-0.1)
-else:
-    count = 0
-    for i in range(length,0):
-        if (m*2 - money[i])>0:
-            count = count + money[i]
-        else:
-            for j in range(length):
-                if money[i] + count >= m*2:
-                    print(count)
-                else:
-                    print(count+money[i])
 
