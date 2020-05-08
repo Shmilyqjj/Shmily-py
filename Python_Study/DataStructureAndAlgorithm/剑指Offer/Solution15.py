@@ -37,6 +37,15 @@ class Solution:
 
 
     # def ReverseList(self, pHead):
+    """
+    比如 现在链表为“abc”
+    
+    pHead现在指向a
+    
+    一次迭代之后，a先暂时被从链表中脱离出来，a反转之后会是最后一个节点，因此next指向None，pHead则指向b。
+    
+    两次迭代之后，b被脱离出来加入反转的新链，并插入a之前，pHead再后移。三次迭代之后反转完成，pHead指向None，结束。
+    """
     #     # write code here
     #     # 解法2 递归
     #     if not pHead or not pHead.next:  # 如果链表为空或者只有一个元素
