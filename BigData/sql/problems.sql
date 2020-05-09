@@ -950,3 +950,5 @@ select id,concat_ws(',',collect_list(course)) from hive_table group by id;
 select id,course from hive4 partition by id
 
 -- 3.如果以上面题2结果为hive_table1，求出行转列结果
+https://blog.csdn.net/qq_41851454/article/details/79856627
+https://www.cnblogs.com/blogyuhan/p/9274784.html
