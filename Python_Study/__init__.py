@@ -16,3 +16,11 @@ example: pip install -i https://pypi.tuna.tsinghua.edu.cn/simple pymysql
 :Site: shmily-qjj.top
 """
 ######################################
+"""
+PyCharm Plugins
+Nyan Progress Bar
+Translation
+Rainbow Brackets
+Codeglance
+Database Tools And Sql
+"""
