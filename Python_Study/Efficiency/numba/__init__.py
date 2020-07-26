@@ -7,7 +7,6 @@ http://numba.pydata.org/
 目前不支持：
 pandas
 scikit-learn, tensorflow, pyrorch
-try…except 异常处理
 with 语句
 yield from
 """
