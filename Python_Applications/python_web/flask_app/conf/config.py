@@ -21,11 +21,11 @@ class Config:
 
 
 class DBConfig(Config):
-    DATABASE_IP = os.environ.get('DATABASE_IP') or "192.168.2.21"
+    DATABASE_IP = os.environ.get('DATABASE_IP') or "192.168.x.xxx"
     DATABASE_PORT = os.environ.get('DATABASE_PORT') or "3306"
     DATABASE_USER = os.environ.get('DATABASE_USER') or "root"
-    DATABASE_PWD = os.environ.get('DATABASE_PWD') or "Smy12345"
-    DATABASE_NAME = os.environ.get('DATABASE_NAME') or "wangwangdb"
+    DATABASE_PWD = os.environ.get('DATABASE_PWD') or "xxx"
+    DATABASE_NAME = os.environ.get('DATABASE_NAME') or "wwdb"
 
 
 config = {

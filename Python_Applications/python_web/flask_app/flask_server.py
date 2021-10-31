@@ -9,7 +9,7 @@ from datetime import timedelta
 from users.login import user_blueprint, user_ns
 from common.router import common_blueprint, common_ns
 
-#  图片访问 http://192.168.12.239:5000/files/imgtest.jpg
+#  图片访问 http://192.168.xx.xxx:5000/files/imgtest.jpg
 app = Flask(__name__, static_folder='static/', static_url_path='/files')
 api = Api(app,
           version="1.0",

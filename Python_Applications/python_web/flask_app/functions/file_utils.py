@@ -31,7 +31,7 @@ class UploadFile(Resource):
         print(file_name)
         try:
             file.save(os.path.join(file_dir, file_name))
-            return success(file_name)  # http://192.168.12.239:5000/files/tips_1635646256.1896794
+            return success(file_name)  # http://192.168.xx.xxx:5000/files/tips_1635646256.1896794
         except Exception as e:
             return error(f"文件上传失败请重新上传{e}")
 
