@@ -2,7 +2,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 """
-:Author: jiajing_qu
+:Author: shmily
 :Create Time: ${DATE} ${TIME}
 :@File: ${NAME}.py
 :@Software: ${PRODUCT_NAME}
@@ -15,3 +15,11 @@ pip install -i https://pypi.tuna.tsinghua.edu.cn/simple module_name
 python -m pip install -i https://pypi.doubanio.com/simple module_name
 example: pip install -i https://pypi.tuna.tsinghua.edu.cn/simple pymysql
 """
+
+
+虚拟环境创建
+pip3 install virtualenv
+cd /opt/Env/PythonVENV 在这个目录下存放venv路径
+virtualenv --system-site-packages venv_name  创建虚拟环境
+source /opt/Env/PythonVENV/venv_name/bin/activate  在当前shell生效该venv
+
