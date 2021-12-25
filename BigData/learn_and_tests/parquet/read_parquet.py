@@ -13,13 +13,15 @@ from hdfs3 import HDFileSystem
 from fastparquet import ParquetFile
 
 
-def read_local_parquet():
+def read_local_parquet(file_name):
     """
     Read Local ParquetFile
+    :param file_name1:
     :return:
     """
-    file_name: str = "F:\\Downloads\\6dc150c9-60d2-419f-9d86-008c7433b155-r-0-6-SG-50-50"
     pf = ParquetFile(file_name)
+    print(pf.columns)
+    print(len(pf.columns))
     print(pf.to_pandas())
 
 
@@ -54,3 +56,8 @@ def read_parquet_on_ha_hdfs():
     sc = hdfs.open
     pf = ParquetFile("/user/hive/warehouse/test.db/test.parquet", open_with=sc)
     print(pf.to_pandas())
+
+
+if __name__ == '__main__':
+    file_name: str = "F:\\Downloads\\6dc150c9-60d2-419f-9d86-008c7433b155-r-0-6-SG-50-50"
+    read_local_parquet(file_name)
