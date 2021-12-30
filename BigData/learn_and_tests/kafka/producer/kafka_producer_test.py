@@ -19,7 +19,7 @@ from kafka.errors import kafka_errors
 # kafka-topics --list --bootstrap-server 192.168.1.101:9092,192.168.1.102:9092,192.168.1.103:9092,192.168.1.104:9092
 
 # 创建测试topic
-# kafka-topics --bootstrap-server 192.168.1.101:9092,192.168.1.102:9092,192.168.1.103:9092,192.168.1.104:9092 --create  --zookeeper 192.168.1.101:2181 --replication-factor 3 --partitions 1 --topic test_topic
+# kafka-topics --create --zookeeper 192.168.1.101:2181 --replication-factor 3 --partitions 1 --topic test_topic
 
 
 BOOTSTRAP_SERVERS = '192.168.1.101:9092,192.168.1.102:9092,192.168.1.103:9092,192.168.1.104:9092'
