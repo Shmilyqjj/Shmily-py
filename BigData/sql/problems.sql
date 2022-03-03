@@ -1622,3 +1622,52 @@ FROM
                           ORDER BY gold DESC) rank
 FROM test_sql.test10) t
 WHERE rank <= 10
+
+
+第十一题
+数据准备
+jack,2017-01-01,10
+tony,2017-01-02,15
+jack,2017-02-03,23
+tony,2017-01-04,29
+jack,2017-01-05,46
+jack,2017-04-06,42
+tony,2017-01-07,50
+jack,2017-01-08,55
+mart,2017-04-08,62
+mart,2017-04-09,68
+neil,2017-05-10,12
+mart,2017-04-11,75
+neil,2017-06-12,80
+mart,2017-04-13,94
+
+create database ods_db_business;
+use ods_db_business;
+create table business(
+name string,
+orderdate string,
+cost int
+) ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';
+
+load data local inpath "/datas/hive-problems-test1/business.txt" into table business;
+
+1.查询在2017年4月份购买过的顾客及总人数
+select name,count(1) from business where substring(orderdate,1,7)='2017-04' group by name;
+
+2.查询顾客的购买明细及月购买总额
+select *, sum(cost) over(partition by name order by orderdate) from business;
+
+3.上述的场景,要将cost按照日期进行累加
+select *, sum(cost) over(order by orderdate) from business;
+
+4.查看顾客上次的购买时间
+select name,orderdate,rank(orderdate) over(partition by name order by orderdate desc) rn from business having rn = 1;
+
+5.查询前20%时间的订单信息
+-- NTILE(n)，用于将分组数据按照顺序切分成n片，返回当前切片值。将一个有序的数据集划分为多个桶(bucket)，并为每行分配一个适当的桶数（切片值，第几个切片，第几个分区等概念）。它可用于将数据划分为相等的小切片，为每一行分配该小切片的数字序号。
+select *,ntile(5) over(order by orderdate) as n from business having n = 5;
+
+
+
+
+
