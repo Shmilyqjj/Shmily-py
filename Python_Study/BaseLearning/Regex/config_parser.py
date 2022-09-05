@@ -6,6 +6,7 @@
 :Owner: jiajing_qu
 :Create time: 2019/11/15 15:28
 """
+from functools import reduce
 
 """
 ini文件结构需要注意一下几点：
@@ -15,9 +16,6 @@ section的名字是区分大小写的,而key的名字是不区分大小写的
 值可以为多行
 配置文件可以包含注释，注释以#或者;为前缀
 """
-
-
-
 try:
     import ConfigParser    # python2中的名字是ConfigParser
 except:
@@ -30,6 +28,7 @@ if parser.read(file_abs_path):   # 读配置文件
     tuples = parser.items('mysqld')  # 获取mysqld下所有参数
     print(tuples)
 # 我们想得到symbolic-links这个参数的值:
+    print(reduce(lambda x, y: dict(x, **y), map(lambda x: {x[0]: x[1]}, parser.items('mysqld'))))
     symbolic_links = reduce(lambda x, y: dict(x, **y), map(lambda x: {x[0]: x[1]}, parser.items('mysqld'))).get('symbolic-links')
     print(symbolic_links)
 

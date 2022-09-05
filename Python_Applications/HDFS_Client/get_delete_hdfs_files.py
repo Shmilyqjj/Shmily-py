@@ -7,19 +7,8 @@
 :Create time: 2019/10/10 12:03
 """
 
-#!/usr/bin/env python
-# -*- coding:utf-8 -*-
-
-"""
-:Description: 检测HDFS中小于4字节文件并删除
-:Owner: jiajing_qu
-:Create time: 2019/10/10 10:38
-"""
 import os
 import traceback
-import sys
-reload(sys)
-sys.setdefaultencoding('utf-8')
 from hdfs import *
 import getpass
 from snakebite.client import HAClient
