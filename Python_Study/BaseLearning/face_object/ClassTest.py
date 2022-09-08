@@ -32,11 +32,13 @@ class Parent:
     def getAttr(self):
         print("parent attr")
 
+
 class child(Parent):
     def __init__(self):
         print("child constructor")
     def childMethod(self):
         print("child method")
+
 
 c = child()
 c.childMethod()
@@ -44,17 +46,17 @@ c.parentMethod()
 c.setAttr(98)
 c.getAttr()
 
-#py支持多继承  class A(B,C):
 
+#py支持多继承  class A(B,C):
 #方法重写
 class Parent0:  # 定义父类
     def myMethod(self):
-        print '调用父类方法'
+        print('调用父类方法')
 
 
 class Child0(Parent0):  # 定义子类
     def myMethod(self):
-        print '调用子类方法'
+        print('调用子类方法')
 c = Child0()  # 子类实例
 c.myMethod()  # 子类调用重写方法
 

@@ -22,4 +22,7 @@ for dic in example:
         result.setdefault(k, []).append(v)
 print(result)
 
-
+# dict形式转换
+from functools import reduce
+l = [{"1": {"1": "a"}}, {"2": {"2": "b"}}, {"3": {"3": "c"}}]
+print(reduce(lambda x, y: dict(x, **y), l))
