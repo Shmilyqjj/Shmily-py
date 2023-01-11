@@ -54,13 +54,13 @@ class App:
 
 # yarnApp 名称,执行脚本,负责人
 APPS = [
-    App("flink_iceberg_rcv5_t_20161_3", "kinit -kt /path/to/etl.keytab etl;/path/to/t_20161_3_rcv5.sh", "qjj"),
-    App("flink_iceberg_rcv5_odl_pay_order", "kinit -kt /path/to/etl.keytab etl;/path/to/odl_pay_order.sh", "qjj"),
-    App("flink_iceberg_rcv5_t_17_3", "kinit -kt /path/to/etl.keytab etl;/path/to/t_17_3_rcv5.sh", "qjj"),
-    App("flink_iceberg_rcv5_t_20120_3", "kinit -kt /path/to/etl.keytab etl;/path/to/t_20120_3_rcv5.sh", "qjj"),
-    App("flink_iceberg_rcv5_t_19_3", "kinit -kt /path/to/etl.keytab etl;/path/to/t_19_3_rcv5.sh", "qjj"),
-    App("flink_iceberg_rcv5_t_30229_3", "kinit -kt /path/to/etl.keytab etl;/path/to/t_30229_3_rcv5.sh", "qjj"),
-    App("flink_iceberg_rcv5_t_20153_3", "kinit -kt /path/to/etl.keytab etl;/path/to/t_20153_3_rcv5.sh", "qjj")
+    App("flink_iceberg_rcv5_t_20161_3", "kinit -kt /path/to/etl.keytab etl;sh /path/to/t_20161_3_rcv5.sh", "qjj"),
+    App("flink_iceberg_rcv5_odl_pay_order", "kinit -kt /path/to/etl.keytab etl;sh /path/to/odl_pay_order.sh", "qjj"),
+    App("flink_iceberg_rcv5_t_17_3", "kinit -kt /path/to/etl.keytab etl;sh /path/to/t_17_3_rcv5.sh", "qjj"),
+    App("flink_iceberg_rcv5_t_20120_3", "kinit -kt /path/to/etl.keytab etl;sh /path/to/t_20120_3_rcv5.sh", "qjj"),
+    App("flink_iceberg_rcv5_t_19_3", "kinit -kt /path/to/etl.keytab etl;sh /path/to/t_19_3_rcv5.sh", "qjj"),
+    App("flink_iceberg_rcv5_t_30229_3", "kinit -kt /path/to/etl.keytab etl;sh /path/to/t_30229_3_rcv5.sh", "qjj"),
+    App("flink_iceberg_rcv5_t_20153_3", "kinit -kt /path/to/etl.keytab etl;sh /path/to/t_20153_3_rcv5.sh", "qjj")
 ]
 
 
@@ -116,7 +116,7 @@ if __name__ == '__main__':
             for app in APPS:
                 if app.name not in app_list:
                     logger.warning("[%s] is not running.Now restart." % app.app_desc())
-                    if exec_linux_cmd("sh " + app.run_script):
+                    if exec_linux_cmd(app.run_script):
                         send_dingtalk(
                             DING_URL,
                             DING_SEC,
