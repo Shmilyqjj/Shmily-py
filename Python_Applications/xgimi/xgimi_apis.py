@@ -10,8 +10,15 @@
 
 # pip install asyncudp asyncio
 # Reference from https://github.com/manymuch/Xgimi-4-Home-Assistant.git
+
 import asyncudp
 import asyncio
+import sys
+
+MY_GIMI_LOCAL_IP="192.168.8.179"
+COMMAND_PORT = 16735
+ADVANCE_PORT = 16750
+ALIVE_PORT = 554
 command_dict = {
             "ok": "KEYPRESSES:49",
             "play": "KEYPRESSES:49",
@@ -29,17 +36,21 @@ command_dict = {
             "poweroff": "KEYPRESSES:30",
             "volumemute": "KEYPRESSES:113",
         }
-MY_GIMI_LOCAL_IP="192.168.8.179"
-COMMAND_PORT = 16735
-ADVANCE_PORT = 16750
-alive_port = 554
-# 要执行关机
-act = "poweroff"
 
-msg = command_dict.get(act)
+opr = ""
+if len(sys.argv) == 1:
+    raise Exception(f"No arg.Available args:{command_dict.keys()}")
+else:
+    opr = sys.argv[1]
+if opr == "":
+    raise Exception(f"Arg is null.Available args:{command_dict.keys()}")
+opr = opr.lower()
+msg = command_dict.get(opr)
 if msg is None:
-    raise NameError("act is not supported.")
+    raise NameError("Arg is not supported.")
 remote_addr = (MY_GIMI_LOCAL_IP, COMMAND_PORT)
+
+
 async def send():
     sock = (await asyncudp.create_socket(remote_addr=remote_addr))
     sock.sendto(msg.encode("utf-8"))
