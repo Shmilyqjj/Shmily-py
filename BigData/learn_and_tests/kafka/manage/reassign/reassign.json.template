@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "partitions": [
+    {
+      "topic": "t_rcv4",
+      "partition": 0,
+      "replicas": [
+        16,
+        13,
+        14
+      ],
+      "log_dirs": [
+        "any",
+        "any",
+        "any"
+      ]
+    }
+  ]
+}

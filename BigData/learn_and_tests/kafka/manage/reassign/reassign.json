@@ -1,0 +1,95 @@
+{
+  "version": 1,
+  "partitions": [
+    {
+      "topic": "t_rcv4",
+      "partition": 1,
+      "replicas": [
+        17,
+        6,
+        5
+      ]
+    },
+    {
+      "topic": "t_rcv4",
+      "partition": 2,
+      "replicas": [
+        17,
+        6,
+        5
+      ]
+    },
+    {
+      "topic": "t_rcv4",
+      "partition": 3,
+      "replicas": [
+        18,
+        17,
+        5
+      ]
+    },
+    {
+      "topic": "t_rcv4",
+      "partition": 4,
+      "replicas": [
+        18,
+        17,
+        5
+      ]
+    },
+    {
+      "topic": "t_rcv4",
+      "partition": 5,
+      "replicas": [
+        18,
+        17,
+        5
+      ]
+    },
+    {
+      "topic": "t_rcv4",
+      "partition": 6,
+      "replicas": [
+        18,
+        17,
+        5
+      ]
+    },
+    {
+      "topic": "t_rcv4",
+      "partition": 7,
+      "replicas": [
+        18,
+        17,
+        6
+      ]
+    },
+    {
+      "topic": "t_rcv4",
+      "partition": 8,
+      "replicas": [
+        18,
+        17,
+        6
+      ]
+    },
+    {
+      "topic": "t_rcv4",
+      "partition": 9,
+      "replicas": [
+        18,
+        17,
+        6
+      ]
+    },
+    {
+      "topic": "t_rcv4",
+      "partition": 10,
+      "replicas": [
+        18,
+        17,
+        2
+      ]
+    }
+  ]
+}
