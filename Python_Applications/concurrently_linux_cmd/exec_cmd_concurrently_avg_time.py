@@ -14,7 +14,6 @@ import threading
 from functools import reduce
 
 costs = []
-threadLock = threading.Lock()
 
 
 def exec_cmd_time(cmd, cmd_id=0):
@@ -33,7 +32,7 @@ if __name__ == '__main__':
     cmd = "sleep 3"
     # cmd = "presto -f=/mnt/nas/qjj/TPC-H/dbgen/sqls/1.sql"
     threads = []
-    for i in range(3):
+    for i in range(concurrency):
         thread = threading.Thread(target=exec_cmd_time, args=(cmd, i))
         threads.append(thread)
     for t in threads:
