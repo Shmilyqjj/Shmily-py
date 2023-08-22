@@ -1,5 +1,6 @@
 #!/bin/bash
 # 执行分区重新分配
+# THROTTLE 单位 bytes/s
 
 ZK=zk_ip:2181/kafka-1.1.1
 THROTTLE=524288000
