@@ -7,6 +7,12 @@ import re
 import time
 
 if __name__ == '__main__':
+    if len(sys.argv) != 2:
+        print()
+        print('An mmexport photos rename tool')
+        print('USAGE: python rename_mmexport_photo.py /path/to/photos')
+        print()
+        exit(1)
     path = sys.argv[1]
     if os.path.exists(path):
         for root, dirs, filenames in os.walk(path):
