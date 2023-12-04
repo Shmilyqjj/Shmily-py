@@ -14,8 +14,7 @@ for i in range(len(res)-1):
     l = res_after.split(" ")
     res_mb = int(l[5]) / 1024
     name = l[len(l)-1].rstrip("\n")
-    if name.find("task_id=") >= 0:
-        print(res_mb,name)
+    print(res_mb, name)
 
 
 """
