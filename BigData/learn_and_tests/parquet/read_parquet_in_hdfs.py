@@ -44,5 +44,15 @@ def read_parquet_on_ha_hdfs():
     print(pf.to_pandas())
 
 
+def read_parquet_on_local():
+    """
+    Read local parquet file
+    :return:
+    """
+    pf = ParquetFile("E:\\test.parquet")
+    print(pf.to_pandas())
+
+
 if __name__ == '__main__':
-    read_parquet_on_hdfs()
+    # read_parquet_on_hdfs()
+    read_parquet_on_local()
