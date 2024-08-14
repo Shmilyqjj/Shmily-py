@@ -40,7 +40,11 @@ if __name__ == '__main__':
     bootstrap_servers = "localhost:9092"
     topic = "qjj"
     message = '''{"a": "b", "c": "d", "e": 1}'''
-    send_kafka(bootstrap_servers, topic, '', 30000, -1)
+    # send_kafka(bootstrap_servers, topic, '', 10100, -1)
+    send_kafka(bootstrap_servers,
+               topic,
+               '{"@event_name":"haha","@event_time": "2024-06-20 21:19:43", "@ip": "127.0.0.1","@dt": "2024-06-20 21:19:43"}',
+               1000000, -1)
 
     # send_kafka(bootstrap_servers, topic, '', 1, 0)
     # send_kafka(bootstrap_servers, topic, '', 6372, 1)
