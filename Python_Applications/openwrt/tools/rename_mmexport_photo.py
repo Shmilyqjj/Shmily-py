@@ -6,6 +6,15 @@ import sys
 import re
 import time
 
+
+def gen_target_file_name(fn: str):
+    if fn.startswith("mmexport"):
+        readable_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(float(int(re.findall("mmexport([0-9]+).*", fn)[0]) / 1000)))
+        return fn.replace("mmexport", f'{readable_time} mmexport')
+    else:
+        return fn
+
+
 if __name__ == '__main__':
     if len(sys.argv) != 2:
         print()
@@ -19,10 +28,10 @@ if __name__ == '__main__':
             path = [os.path.join(root, name) for name in filenames]
             for file in path:
                 file_name = str(file.rsplit("/", 1)[1])
-                if file_name.startswith("mmexport"):
+                target_file_name = gen_target_file_name(file_name)
+                if file_name != target_file_name:
                     try:
-                        readable_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(float(int(re.findall("mmexport([0-9]+).*", file_name)[0]) / 1000)))
-                        target_file = file.replace("mmexport", f'{readable_time} mmexport')
+                        target_file = file.replace(file_name, target_file_name)
                         print(f"Rename {file} to {target_file}")
                         os.rename(file, target_file)
                     except Exception as e:
