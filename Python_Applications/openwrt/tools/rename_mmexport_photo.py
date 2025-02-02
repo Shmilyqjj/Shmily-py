@@ -5,12 +5,27 @@ import os
 import sys
 import re
 import time
+from datetime import datetime
 
 
 def gen_target_file_name(fn: str):
+    match = re.search(r'\d{10,13}', fn)
     if fn.startswith("mmexport"):
+        # 微信mmexport图片文件
         readable_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(float(int(re.findall("mmexport([0-9]+).*", fn)[0]) / 1000)))
-        return fn.replace("mmexport", f'{readable_time} mmexport')
+        return fn.replace("mmexport", f'{readable_time}_mmexport')
+    elif match:
+        # 含时间戳的其他文件
+        timestamp_str = match.group()
+        if len(timestamp_str) == 10:
+            timestamp = int(timestamp_str)
+        elif len(timestamp_str) == 13:
+            timestamp = int(timestamp_str) / 1000
+        else:
+            return file_name
+        dt = datetime.fromtimestamp(timestamp)
+        time_str = dt.strftime('%Y-%m-%d %H:%M:%S')
+        return f"{time_str}_{file_name}"
     else:
         return fn
 
