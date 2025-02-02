@@ -6,6 +6,7 @@ import sys
 import re
 import time
 from datetime import datetime
+MIN_TIMESTAMP = 884793600
 
 
 def gen_target_file_name(fn: str):
@@ -22,10 +23,12 @@ def gen_target_file_name(fn: str):
         elif len(timestamp_str) == 13:
             timestamp = int(timestamp_str) / 1000
         else:
-            return file_name
+            return fn
+        if timestamp > time.time() or timestamp < MIN_TIMESTAMP:
+            return fn
         dt = datetime.fromtimestamp(timestamp)
         time_str = dt.strftime('%Y-%m-%d %H:%M:%S')
-        return f"{time_str}_{file_name}"
+        return fn if (time_str in fn or dt.strftime('%Y%m%d') in fn) else f"{time_str}_{fn}"
     else:
         return fn
 
@@ -45,8 +48,8 @@ if __name__ == '__main__':
                 file_name = str(file.rsplit("/", 1)[1])
                 target_file_name = gen_target_file_name(file_name)
                 if file_name != target_file_name:
+                    target_file = file.replace(file_name, target_file_name)
                     try:
-                        target_file = file.replace(file_name, target_file_name)
                         print(f"Rename {file} to {target_file}")
                         os.rename(file, target_file)
                     except Exception as e:
