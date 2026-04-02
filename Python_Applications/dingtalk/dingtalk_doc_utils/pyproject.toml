@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61", "wheel", "build"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dingtalk-doc-utils"
+version = "0.1.0"
+description = "DingTalk document reader utilities"
+readme = "README.md"
+requires-python = ">=3.7"
+dependencies = [
+  "requests>=2.16.0",
+  "pandas>=1.3.2"
+]
+
+[tool.setuptools]
+packages = ["dingtalk_doc_utils"]
+package-dir = {"dingtalk_doc_utils" = "."}
+include-package-data = false
+
