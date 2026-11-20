@@ -18,6 +18,10 @@ from urllib3.util.retry import Retry
 
 logger = logging.getLogger(__name__)
 
+SHEET_READ_MAX_ATTEMPTS = 5
+SHEET_READ_RETRY_INTERVAL_SECONDS = 120
+_RETRYABLE_HTTP_STATUS = (429, 500, 502, 503, 504)
+
 
 class DingTalkDocReader:
     """钉钉文档读取器（支持超时、重试、结构化日志）"""
@@ -65,9 +69,9 @@ class DingTalkDocReader:
             total=max_retries,
             connect=max_retries,
             read=max_retries,
-            status=max_retries,
+            status=0,
             backoff_factor=backoff_factor,
-            status_forcelist=[429, 500, 502, 503, 504],
+            status_forcelist=[],
             raise_on_status=False,
         )
         try:
@@ -225,6 +229,52 @@ class DingTalkDocReader:
             raise Exception(f"{action}失败: {result}")
         return result
 
+    @staticmethod
+    def _is_retryable_http_error(exc: Exception) -> bool:
+        message = str(exc)
+        return any(f"HTTP {code}" in message for code in _RETRYABLE_HTTP_STATUS)
+
+    def _get_range_values(
+        self,
+        workbook_id: str,
+        sheet_id: str,
+        range_address: str,
+        operator_id: str,
+    ) -> Dict[str, Any]:
+        url = f"{self.BASE_URL}/v1.0/doc/workbooks/{workbook_id}/sheets/{sheet_id}/ranges/{range_address}"
+        params = {"operatorId": operator_id, "select": "values"}
+        for attempt in range(1, SHEET_READ_MAX_ATTEMPTS + 1):
+            try:
+                response = self._request(
+                    "GET",
+                    url,
+                    headers=self._get_headers(),
+                    params=params,
+                    action="get_sheet_data",
+                )
+                return self._ensure_success(response, "读取工作表数据")
+            except Exception as exc:
+                if attempt >= SHEET_READ_MAX_ATTEMPTS or not self._is_retryable_http_error(exc):
+                    raise
+                self._log(
+                    "warning",
+                    "sheet_read_retry",
+                    attempt=attempt,
+                    max_attempts=SHEET_READ_MAX_ATTEMPTS,
+                    sleep_seconds=SHEET_READ_RETRY_INTERVAL_SECONDS,
+                    range=range_address,
+                    error=str(exc),
+                )
+                logger.warning(
+                    "读取钉钉表格失败，%ss 后重试 (%s/%s): %s",
+                    SHEET_READ_RETRY_INTERVAL_SECONDS,
+                    attempt,
+                    SHEET_READ_MAX_ATTEMPTS,
+                    exc,
+                )
+                time.sleep(SHEET_READ_RETRY_INTERVAL_SECONDS)
+        raise Exception(f"读取工作表数据失败: {range_address}")
+
     def get_sheet_list(self, workbook_url: str, operator_id: Optional[str] = None) -> Dict[str, Any]:
         workbook_id = self._resolve_workbook_id(workbook_url)
         url = f"{self.BASE_URL}/v1.0/doc/workbooks/{workbook_id}/sheets"
@@ -248,10 +298,12 @@ class DingTalkDocReader:
     ) -> Dict[str, Any]:
         workbook_id = self._resolve_workbook_id(workbook_url)
         range_address = range_ or "A1:AD1000"
-        url = f"{self.BASE_URL}/v1.0/doc/workbooks/{workbook_id}/sheets/{sheet_id}/ranges/{range_address}"
-        params = {"operatorId": self.resolve_operator_id(operator_id=operator_id)}
-        response = self._request("GET", url, headers=self._get_headers(), params=params, action="get_sheet_data")
-        return self._ensure_success(response, "读取工作表数据")
+        return self._get_range_values(
+            workbook_id,
+            sheet_id,
+            range_address,
+            self.resolve_operator_id(operator_id=operator_id),
+        )
 
     @staticmethod
     def _col_index_to_letters(col_index: int) -> str:
@@ -282,12 +334,40 @@ class DingTalkDocReader:
                         stack.append(item)
         return None
 
+    @staticmethod
+    def _extract_named_int(payload: Dict[str, Any], key: str) -> Optional[int]:
+        stack: List[Any] = [payload]
+        while stack:
+            current = stack.pop()
+            if isinstance(current, dict):
+                for item_key, value in current.items():
+                    if item_key == key and isinstance(value, int) and not isinstance(value, bool):
+                        return value
+                    if isinstance(value, (dict, list)):
+                        stack.append(value)
+            elif isinstance(current, list):
+                for item in current:
+                    if isinstance(item, (dict, list)):
+                        stack.append(item)
+        return None
+
+    def _extract_used_bounds(self, sheet_properties: Dict[str, Any]) -> Optional[tuple]:
+        """返回 (行数, 列数)。lastNonEmpty* 从 0 开始，空表为 -1。"""
+        last_row = self._extract_named_int(sheet_properties, "lastNonEmptyRow")
+        last_col = self._extract_named_int(sheet_properties, "lastNonEmptyColumn")
+        if last_row is None or last_col is None:
+            return None
+        if last_row < 0 or last_col < 0:
+            return (0, 0)
+        return (last_row + 1, last_col + 1)
+
     def _read_sheet_data_in_chunks(
         self,
         workbook_url: str,
         sheet_id: str,
         operator_id: str,
         column_count: int,
+        row_count: Optional[int] = None,
         max_cells_per_request: int = 30000,
         max_chunks: int = 200,
     ) -> Dict[str, Any]:
@@ -299,13 +379,21 @@ class DingTalkDocReader:
         empty_chunk_count = 0
 
         for _ in range(max_chunks):
+            if row_count is not None and start_row > row_count:
+                break
             end_row = start_row + rows_per_chunk - 1
+            if row_count is not None:
+                end_row = min(end_row, row_count)
             range_address = f"A{start_row}:{col_letters}{end_row}"
-            url = f"{self.BASE_URL}/v1.0/doc/workbooks/{workbook_id}/sheets/{sheet_id}/ranges/{range_address}"
-            params = {"operatorId": operator_id}
-            response = self._request("GET", url, headers=self._get_headers(), params=params, action="get_sheet_data_chunk")
-            chunk_data = self._ensure_success(response, "读取工作表数据")
+            chunk_data = self._get_range_values(workbook_id, sheet_id, range_address, operator_id)
             grid = self._extract_grid(chunk_data)
+            if row_count is not None:
+                if grid:
+                    all_rows.extend(grid)
+                if end_row >= row_count:
+                    break
+                start_row = end_row + 1
+                continue
             if not grid:
                 empty_chunk_count += 1
             else:
@@ -436,18 +524,59 @@ class DingTalkDocReader:
             data = self.get_sheet_data(workbook_url, actual_sheet_id, range_, operator_id=actual_operator_id)
         else:
             inferred_col_count = 26
+            used_row_count: Optional[int] = None
+            last_non_empty_row: Optional[int] = None
+            last_non_empty_column: Optional[int] = None
             try:
                 sheet_properties = self.get_sheet_properties(workbook_url, actual_sheet_id, operator_id=actual_operator_id)
-                parsed_col_count = self._extract_column_count(sheet_properties)
-                if parsed_col_count:
-                    inferred_col_count = max(1, min(parsed_col_count, 702))
-            except Exception:
+                last_non_empty_row = self._extract_named_int(sheet_properties, "lastNonEmptyRow")
+                last_non_empty_column = self._extract_named_int(sheet_properties, "lastNonEmptyColumn")
+                used_bounds = self._extract_used_bounds(sheet_properties)
+                if used_bounds == (0, 0):
+                    used_row_count = 0
+                elif used_bounds:
+                    used_row_count, inferred_col_count = used_bounds
+                    inferred_col_count = max(1, min(inferred_col_count, 702))
+                else:
+                    parsed_col_count = self._extract_column_count(sheet_properties)
+                    if parsed_col_count:
+                        inferred_col_count = max(1, min(parsed_col_count, 702))
+            except Exception as exc:
                 inferred_col_count = 26
+                used_row_count = None
+                self._log("warning", "sheet_properties_unavailable", error=str(exc))
+            range_address = None
+            if used_row_count:
+                range_address = f"A1:{self._col_index_to_letters(inferred_col_count)}{used_row_count}"
+            self._log(
+                "info",
+                "sheet_used_range",
+                sheet_id=actual_sheet_id,
+                lastNonEmptyRow=last_non_empty_row,
+                lastNonEmptyColumn=last_non_empty_column,
+                rows=used_row_count,
+                cols=inferred_col_count,
+                range=range_address,
+            )
+            logger.info(
+                "工作表 %s lastNonEmptyRow=%s lastNonEmptyColumn=%s，读取范围 %s",
+                actual_sheet_id,
+                last_non_empty_row,
+                last_non_empty_column,
+                range_address or "按列数分块",
+            )
+            print(
+                f"工作表 {actual_sheet_id} lastNonEmptyRow={last_non_empty_row} "
+                f"lastNonEmptyColumn={last_non_empty_column}，读取范围 {range_address or '按列数分块'}"
+            )
+            if used_row_count == 0:
+                return pd.DataFrame()
             data = self._read_sheet_data_in_chunks(
                 workbook_url=workbook_url,
                 sheet_id=actual_sheet_id,
                 operator_id=actual_operator_id,
                 column_count=inferred_col_count,
+                row_count=used_row_count,
             )
         return self.sheet_data_to_dataframe(data, header_row)
 
